@@ -1,0 +1,32 @@
+Package: rwevalidate
+Title: Validate Patient Cohorts for Real-World Evidence Studies on OMOP CDM
+Version: 0.0.0.9000
+Authors@R:
+    person("Hamid", "Tavakoli", email = "htavakoli@gmail.com",
+           role = c("aut", "cre"))
+Description: Validates instantiated patient cohorts on an OMOP Common Data
+    Model database for real-world-evidence (RWE) studies. Produces a
+    structured HTML and JSON validation report aligned with FDA RWE guidance
+    (Relevance and Reliability) and HARPER protocol requirements, covering
+    cohort attrition, temporal data density, and (in later versions) concept
+    coverage and covariate feasibility.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports:
+    DBI,
+    RPostgres,
+    dplyr,
+    ggplot2,
+    gt,
+    jsonlite,
+    rmarkdown,
+    glue,
+    cli,
+    rlang,
+    utils
+Suggests:
+    testthat (>= 3.0.0),
+    duckdb
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

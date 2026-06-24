@@ -1,0 +1,186 @@
+---
+title: "RWE Cohort Validation Report"
+date: "`r params$run_date`"
+output:
+  html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    theme: cosmo
+params:
+  results: null
+  cdm_schema: null
+  cohort_id: null
+  check_summary: null
+  package_version: null
+  run_date: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.width = 9, fig.height = 4.5)
+library(ggplot2)
+
+res          <- params$results
+attrition    <- res$attrition
+density      <- res$density
+data_source  <- res$data_source
+check_sum    <- params$check_summary
+
+status_badge <- function(s) {
+  switch(s,
+    pass = "\U1F7E2 PASS",
+    warn = "\U1F7E1 WARN",
+    fail = "\U1F534 FAIL",
+    s)
+}
+
+kbl <- function(df, ...) knitr::kable(df, ...)
+```
+
+This report validates an instantiated cohort on an OMOP CDM database for
+real-world-evidence use, following the FDA RWE framework (Relevance +
+Reliability) and HARPER protocol structure.
+
+- **CDM schema:** `r params$cdm_schema`
+- **Cohort definition id:** `r params$cohort_id`
+- **Generated:** `r params$run_date`
+- **rwevalidate version:** `r params$package_version`
+
+# 6. Validation Summary {-}
+
+*Traffic-light status per check (shown first for at-a-glance review).*
+
+```{r summary}
+if (!is.null(check_sum) && nrow(check_sum) > 0) {
+  disp <- data.frame(
+    Status  = vapply(check_sum$status, status_badge, character(1)),
+    Section = check_sum$section,
+    `Maps to` = check_sum$maps_to,
+    Detail  = check_sum$detail,
+    check.names = FALSE, stringsAsFactors = FALSE
+  )
+  kbl(disp, align = "llll")
+} else {
+  cat("_No checks were run._")
+}
+```
+
+# 1. Data Source Summary
+
+*FDA Relevance — is the data fit for the question?*
+
+```{r data-source}
+if (!is.null(data_source)) {
+  ds <- data.frame(
+    Property = names(data_source),
+    Value    = vapply(data_source, function(x) paste(format(x), collapse = ", "),
+                      character(1)),
+    stringsAsFactors = FALSE
+  )
+  kbl(ds)
+} else if (!is.null(attrition)) {
+  cat(sprintf("Cohort size: **%d** subjects in schema `%s` (cohort id %s).\n\n",
+              attrition$cohort_size, params$cdm_schema, params$cohort_id))
+  cat("_Full data-source metadata (CDM version, patient N, date range) is",
+      "populated when the report is produced via_ `validate_cohort()`.")
+} else {
+  cat("_No data-source information available._")
+}
+```
+
+# 2. Concept Coverage
+
+*FDA Relevance — vocabulary and concept mapping.*
+
+> **Planned for v0.2.** Concept prevalence, standard/source mapping rates, and
+> ancestor coverage are not computed in this version.
+
+# 3. Cohort Attrition
+
+*HARPER §5 / RECORD-PE Item 6 — who is in the cohort and how it was built.*
+
+```{r attrition, results='asis'}
+if (is.null(attrition)) {
+  cat("_Attrition module was not run._\n")
+} else {
+  cat(sprintf("**Cohort size:** %d subjects.\n\n", attrition$cohort_size))
+
+  cat("**Prior observation coverage**\n\n")
+  print(kbl(attrition$obs_coverage))
+  cat("\n\n**Demographics at index**\n\n")
+  print(kbl(attrition$demographics))
+
+  if (length(attrition$flags)) {
+    cat("\n\n**Flags**\n\n")
+    for (f in attrition$flags) cat("-", f, "\n")
+  }
+  cat("\n")
+}
+```
+
+```{r attrition-plot}
+if (!is.null(attrition) && nrow(attrition$index_date_summary) > 0) {
+  ggplot(attrition$index_date_summary, aes(index_year, n)) +
+    geom_col(fill = "#2c7fb8") +
+    labs(title = "Index date distribution by year",
+         x = "Index year", y = "Patients") +
+    theme_minimal()
+}
+```
+
+# 4. Temporal Data Density
+
+*FDA Reliability — data accrual around the index date.*
+
+```{r density-heatmap}
+if (!is.null(density) && nrow(density$density_by_domain) > 0) {
+  ggplot(density$density_by_domain,
+         aes(months_from_index, domain, fill = records_per_patient)) +
+    geom_tile() +
+    scale_fill_viridis_c(option = "C", trans = "log10") +
+    labs(title = "Record density: records per patient per month",
+         x = "Months from index", y = NULL, fill = "Rec/patient (log)") +
+    theme_minimal()
+} else {
+  cat("_No density data available._")
+}
+```
+
+```{r followup, results='asis'}
+if (!is.null(density) && nrow(density$followup_summary) > 0) {
+  cat("**Follow-up completeness — censoring breakdown**\n\n")
+  print(kbl(density$followup_summary))
+  cat("\n")
+  if (length(density$flags)) {
+    cat("\n**Flags**\n\n")
+    for (f in density$flags) cat("-", f, "\n")
+  }
+} else {
+  cat("_Follow-up summary not available._")
+}
+```
+
+```{r followup-plot}
+if (!is.null(density) && nrow(density$followup_detail) > 0) {
+  ggplot(density$followup_detail, aes(followup_days)) +
+    geom_histogram(bins = 30, fill = "#41b6c4") +
+    labs(title = "Follow-up duration", x = "Follow-up (days)", y = "Patients") +
+    theme_minimal()
+}
+```
+
+# 5. Covariate Feasibility
+
+*HARPER §4 — comparability and covariate availability.*
+
+> **Planned for v0.2.** Runs only when a comparator cohort is supplied
+> (`comparator_id`). SMD love plot, prevalence table, and power calculation.
+
+---
+
+```{r footer, results='asis'}
+cat(sprintf("_Report generated by rwevalidate %s. JSON sidecar: ",
+            params$package_version))
+cat("`validation_results.json` (same directory)._")
+```

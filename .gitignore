@@ -1,0 +1,12 @@
+# Secrets — never commit
+.Renviron
+.Rhistory
+.RData
+.Rproj.user
+
+# R build artifacts
+*.Rcheck/
+*.tar.gz
+src/*.o
+src/*.so
+src/*.dll

@@ -1,0 +1,11 @@
+# Copy this file to ~/.Renviron (recommended: C:\Users\tavak\Documents\.Renviron)
+# or to the package root, then fill in real values. Restart R after editing.
+# NEVER commit the real .Renviron — it holds your database password.
+#
+# Format rules: KEY=value, no spaces around '=', no quotes, no 'export'.
+
+RWE_DB_NAME=your_dbname
+RWE_DB_USER=your_user
+RWE_DB_PASS=your_password
+RWE_DB_HOST=localhost
+RWE_DB_PORT=5432
