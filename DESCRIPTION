@@ -16,17 +16,14 @@ Roxygen: list(markdown = TRUE)
 Imports:
     DBI,
     RPostgres,
-    dplyr,
-    ggplot2,
-    gt,
     jsonlite,
     rmarkdown,
     glue,
     cli,
-    rlang,
     utils
 Suggests:
     testthat (>= 3.0.0),
-    duckdb
+    duckdb,
+    ggplot2
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0

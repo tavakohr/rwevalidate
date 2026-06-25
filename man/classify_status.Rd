@@ -14,6 +14,6 @@ A single string: \code{"pass"}, \code{"warn"}, or \code{"fail"}.
 }
 \description{
 Flags are strings prefixed \code{"FAIL:"} or \code{"WARN:"} (see the module functions).
-Any \code{FAIL} → \code{"fail"} (red); else any \code{WARN} → \code{"warn"} (amber); else
+Any \code{FAIL} -> \code{"fail"} (red); else any \code{WARN} -> \code{"warn"} (amber); else
 \code{"pass"} (green).
 }

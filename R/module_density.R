@@ -45,7 +45,7 @@ density_one_domain <- function(con, cdm_schema, cohort_table, cohort_id,
   ))
 }
 
-#' Module 3 — Temporal Data Density
+#' Module 3 - Temporal Data Density
 #'
 #' Profiles longitudinal data accrual around the index date: record density per
 #' patient per month across clinical domains, and follow-up completeness with a

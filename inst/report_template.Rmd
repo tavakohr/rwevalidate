@@ -19,7 +19,8 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
                       fig.width = 9, fig.height = 4.5)
-library(ggplot2)
+has_ggplot <- requireNamespace("ggplot2", quietly = TRUE)
+if (has_ggplot) library(ggplot2)
 
 res          <- params$results
 attrition    <- res$attrition
@@ -119,7 +120,7 @@ if (is.null(attrition)) {
 }
 ```
 
-```{r attrition-plot}
+```{r attrition-plot, eval=has_ggplot}
 if (!is.null(attrition) && nrow(attrition$index_date_summary) > 0) {
   ggplot(attrition$index_date_summary, aes(index_year, n)) +
     geom_col(fill = "#2c7fb8") +
@@ -133,7 +134,7 @@ if (!is.null(attrition) && nrow(attrition$index_date_summary) > 0) {
 
 *FDA Reliability — data accrual around the index date.*
 
-```{r density-heatmap}
+```{r density-heatmap, eval=has_ggplot}
 if (!is.null(density) && nrow(density$density_by_domain) > 0) {
   ggplot(density$density_by_domain,
          aes(months_from_index, domain, fill = records_per_patient)) +
@@ -161,7 +162,7 @@ if (!is.null(density) && nrow(density$followup_summary) > 0) {
 }
 ```
 
-```{r followup-plot}
+```{r followup-plot, eval=has_ggplot}
 if (!is.null(density) && nrow(density$followup_detail) > 0) {
   ggplot(density$followup_detail, aes(followup_days)) +
     geom_histogram(bins = 30, fill = "#41b6c4") +

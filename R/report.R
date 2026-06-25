@@ -1,7 +1,7 @@
 #' Classify a vector of module flags into a traffic-light status
 #'
 #' Flags are strings prefixed `"FAIL:"` or `"WARN:"` (see the module functions).
-#' Any `FAIL` → `"fail"` (red); else any `WARN` → `"warn"` (amber); else
+#' Any `FAIL` -> `"fail"` (red); else any `WARN` -> `"warn"` (amber); else
 #' `"pass"` (green).
 #'
 #' @param flags Character vector of flag messages (may be empty).
@@ -26,9 +26,9 @@ classify_status <- function(flags) {
 build_check_summary <- function(results) {
   spec <- list(
     attrition = list(section = "Cohort Attrition",
-                     maps_to = "HARPER §5 / RECORD-PE Item 6"),
+                     maps_to = "HARPER Sec.5 / RECORD-PE Item 6"),
     density   = list(section = "Temporal Data Density",
-                     maps_to = "FDA Reliability — data accrual")
+                     maps_to = "FDA Reliability - data accrual")
   )
 
   rows <- lapply(names(spec), function(key) {

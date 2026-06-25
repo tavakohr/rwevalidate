@@ -2,7 +2,7 @@
 % Please edit documentation in R/module_attrition.R
 \name{run_attrition}
 \alias{run_attrition}
-\title{Module 2 — Cohort Attrition Audit}
+\title{Module 2 - Cohort Attrition Audit}
 \usage{
 run_attrition(
   con,
@@ -46,7 +46,7 @@ criteria lists are not yet a supported input. Default 0.5.}
 \value{
 A named list:
 \describe{
-\item{cohort_size}{integer — distinct subjects in the cohort}
+\item{cohort_size}{integer - distinct subjects in the cohort}
 \item{index_date_summary}{data.frame of \code{index_year}, \code{n}}
 \item{obs_coverage}{data.frame: \code{cohort_n}, \code{n_sufficient}, \code{pct_sufficient}, \code{min_prior_days}}
 \item{demographics}{data.frame: \code{sex}, \code{mean_age}, \code{min_age}, \code{max_age}, \code{n}}

@@ -1,0 +1,4 @@
+^\.Renviron\.example$
+^\.git$
+^\.gitignore$
+^LICENSE\.md$

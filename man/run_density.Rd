@@ -2,7 +2,7 @@
 % Please edit documentation in R/module_density.R
 \name{run_density}
 \alias{run_density}
-\title{Module 3 — Temporal Data Density}
+\title{Module 3 - Temporal Data Density}
 \usage{
 run_density(
   con,

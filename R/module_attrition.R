@@ -1,4 +1,4 @@
-#' Module 2 — Cohort Attrition Audit
+#' Module 2 - Cohort Attrition Audit
 #'
 #' Profiles an instantiated cohort: size, index-date distribution, prior
 #' observation coverage, and demographics at index. Maps to HARPER section 5 and
@@ -25,7 +25,7 @@
 #'
 #' @return A named list:
 #'   \describe{
-#'     \item{cohort_size}{integer — distinct subjects in the cohort}
+#'     \item{cohort_size}{integer - distinct subjects in the cohort}
 #'     \item{index_date_summary}{data.frame of `index_year`, `n`}
 #'     \item{obs_coverage}{data.frame: `cohort_n`, `n_sufficient`, `pct_sufficient`, `min_prior_days`}
 #'     \item{demographics}{data.frame: `sex`, `mean_age`, `min_age`, `max_age`, `n`}
