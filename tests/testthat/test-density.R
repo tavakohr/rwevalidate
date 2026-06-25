@@ -24,10 +24,14 @@ test_that("all four domains are profiled with full record counts", {
 
   expect_setequal(unique(res$density_by_domain$domain),
                   c("conditions", "drugs", "measurements", "visits"))
-  # one record per patient per domain -> 12 records each
+  # one record per patient for drugs/measurements/visits (12 each); conditions
+  # has extra HF-descendant + unmapped rows from the mock (15).
   per_domain <- tapply(res$density_by_domain$n_records,
                        res$density_by_domain$domain, sum)
-  expect_true(all(per_domain == 12L))
+  expect_equal(per_domain[["drugs"]], 12L)
+  expect_equal(per_domain[["measurements"]], 12L)
+  expect_equal(per_domain[["visits"]], 12L)
+  expect_equal(per_domain[["conditions"]], 15L)
   expect_length(res$flags, 0)
 })
 

@@ -25,6 +25,7 @@ if (has_ggplot) library(ggplot2)
 res          <- params$results
 attrition    <- res$attrition
 density      <- res$density
+concepts     <- res$concepts
 data_source  <- res$data_source
 check_sum    <- params$check_summary
 
@@ -92,10 +93,33 @@ if (!is.null(data_source)) {
 
 # 2. Concept Coverage
 
-*FDA Relevance — vocabulary and concept mapping.*
+*FDA Relevance - vocabulary and concept mapping.*
 
-> **Planned for v0.2.** Concept prevalence, standard/source mapping rates, and
-> ancestor coverage are not computed in this version.
+```{r concepts, results='asis'}
+if (is.null(concepts)) {
+  cat("_Concept coverage was not run. Supply_ `concept_ids` _to_ `validate_cohort()`",
+      "_to enable Module 1._")
+} else {
+  cat(sprintf(
+    "**Concept prevalence:** %d of %d CDM persons (%.1f%%) have a cohort-defining concept.\n\n",
+    concepts$prevalence$n_with, concepts$prevalence$n_total, concepts$prevalence$pct))
+
+  cat(sprintf(
+    "**Ancestor coverage:** %d of %d descendant concepts (%.1f%%) appear in the data.\n\n",
+    concepts$ancestor_coverage$present_descendants,
+    concepts$ancestor_coverage$total_descendants,
+    concepts$ancestor_coverage$pct_present))
+
+  cat("**Vocabulary mapping rate by domain**\n\n")
+  print(kbl(concepts$mapping_by_domain))
+
+  if (length(concepts$flags)) {
+    cat("\n\n**Flags**\n\n")
+    for (f in concepts$flags) cat("-", f, "\n")
+  }
+  cat("\n")
+}
+```
 
 # 3. Cohort Attrition
 

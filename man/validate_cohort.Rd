@@ -10,6 +10,8 @@ validate_cohort(
   cohort_id = 1,
   con = NULL,
   vocab_schema = "vocab",
+  concept_ids = NULL,
+  concept_domain = "condition",
   comparator_id = NULL,
   obs_window = c(-365, 0),
   density_window = c(-365, 365),
@@ -37,6 +39,13 @@ from the connection arguments and closed on exit.}
 \item{vocab_schema}{Schema holding the vocabulary tables. Default \code{"vocab"}.
 Required because the clinical schema's \code{concept} table may be empty in
 split-schema builds.}
+
+\item{concept_ids}{Optional numeric vector of cohort-defining seed concept
+id(s). When supplied, Module 1 (concept coverage) runs and populates report
+Section 2. When \code{NULL} (default) Module 1 is skipped.}
+
+\item{concept_domain}{Domain the seed concepts live in (\code{"condition"},
+\code{"drug"}, \code{"measurement"}, \code{"procedure"}). Default \code{"condition"}.}
 
 \item{comparator_id}{Reserved for Module 4 (covariate feasibility, v0.2).
 Currently ignored with a message if set.}

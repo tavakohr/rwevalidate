@@ -47,6 +47,11 @@ build_data_source <- function(con, cdm_schema) {
 #' @param vocab_schema Schema holding the vocabulary tables. Default `"vocab"`.
 #'   Required because the clinical schema's `concept` table may be empty in
 #'   split-schema builds.
+#' @param concept_ids Optional numeric vector of cohort-defining seed concept
+#'   id(s). When supplied, Module 1 (concept coverage) runs and populates report
+#'   Section 2. When `NULL` (default) Module 1 is skipped.
+#' @param concept_domain Domain the seed concepts live in (`"condition"`,
+#'   `"drug"`, `"measurement"`, `"procedure"`). Default `"condition"`.
 #' @param comparator_id Reserved for Module 4 (covariate feasibility, v0.2).
 #'   Currently ignored with a message if set.
 #' @param obs_window Length-2 numeric `c(pre, post)` days for attrition prior
@@ -82,6 +87,8 @@ validate_cohort <- function(cdm_schema,
                             cohort_id = 1,
                             con = NULL,
                             vocab_schema = "vocab",
+                            concept_ids = NULL,
+                            concept_domain = "condition",
                             comparator_id = NULL,
                             obs_window = c(-365, 0),
                             density_window = c(-365, 365),
@@ -130,14 +137,26 @@ validate_cohort <- function(cdm_schema,
     con, cdm_schema = cdm_schema, cohort_table = cohort_table,
     cohort_id = cohort_id, obs_window = density_window)
 
+  concepts <- NULL
+  if (!is.null(concept_ids)) {
+    cli::cli_alert_info("Running concept coverage (Module 1)...")
+    concepts <- run_concepts(
+      con, cdm_schema = cdm_schema, cohort_table = cohort_table,
+      cohort_id = cohort_id, concept_ids = concept_ids,
+      domain = concept_domain, vocab_schema = vocab_schema)
+  } else {
+    cli::cli_inform("Module 1 (concept coverage) skipped; supply {.arg concept_ids} to enable.")
+  }
+
   data_source <- build_data_source(con, cdm_schema)
 
   results <- list(
     data_source = data_source,
+    concepts    = concepts,
     attrition   = attrition,
     density     = density
   )
-  all_flags <- c(attrition$flags, density$flags)
+  all_flags <- c(concepts$flags, attrition$flags, density$flags)
 
   # --- report -------------------------------------------------------------
   run_date <- Sys.time()

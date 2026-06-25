@@ -44,6 +44,16 @@ setup_mock_cdm <- function(n = 12L) {
     condition_end_date        = cond_start + 30L,
     condition_type_concept_id = 32020L
   )
+  # Two records of a 2nd HF descendant (present) + one unmapped record, so
+  # ancestor coverage < 100% and mapping rate < 100% in tests.
+  condition_occurrence <- rbind(condition_occurrence, data.frame(
+    condition_occurrence_id   = c(101L, 102L, 103L),
+    person_id                 = c(1L, 2L, 3L),
+    condition_concept_id      = c(4229440L, 4229440L, 0L),  # present, present, unmapped
+    condition_start_date      = cond_start[1:3],
+    condition_end_date        = cond_start[1:3] + 30L,
+    condition_type_concept_id = 32020L
+  ))
 
   # --- drug_exposure ------------------------------------------------------
   drug_start <- cond_start + 5L
@@ -65,6 +75,16 @@ setup_mock_cdm <- function(n = 12L) {
     measurement_date        = meas_date,
     value_as_number         = 1.0 + (ids / 10),
     measurement_type_concept_id = 44818702L
+  )
+
+  # --- procedure_occurrence ----------------------------------------------
+  # 3 mapped + 1 unmapped (concept_id = 0) -> 25% unmapped for mapping tests.
+  procedure_occurrence <- data.frame(
+    procedure_occurrence_id   = 1:4,
+    person_id                 = 1:4,
+    procedure_concept_id      = c(4107731L, 4107731L, 4107731L, 0L),
+    procedure_date            = cond_start[1:4],
+    procedure_type_concept_id = 38000275L
   )
 
   # --- visit_occurrence ---------------------------------------------------
@@ -89,23 +109,26 @@ setup_mock_cdm <- function(n = 12L) {
 
   # --- concept (minimal vocabulary) --------------------------------------
   concept <- data.frame(
-    concept_id   = c(8507L, 8532L, 316139L, 1308216L, 3016723L, 9201L),
-    concept_name = c("MALE", "FEMALE", "Heart failure", "lisinopril",
-                     "Creatinine", "Inpatient Visit"),
-    domain_id        = c("Gender", "Gender", "Condition", "Drug",
-                         "Measurement", "Visit"),
-    vocabulary_id    = c("Gender", "Gender", "SNOMED", "RxNorm",
-                         "LOINC", "Visit"),
+    concept_id   = c(8507L, 8532L, 316139L, 4229440L, 444031L, 1308216L,
+                     3016723L, 9201L, 4107731L),
+    concept_name = c("MALE", "FEMALE", "Heart failure", "CHF",
+                     "Acute HF (not in data)", "lisinopril",
+                     "Creatinine", "Inpatient Visit", "Procedure X"),
+    domain_id        = c("Gender", "Gender", "Condition", "Condition",
+                         "Condition", "Drug", "Measurement", "Visit", "Procedure"),
+    vocabulary_id    = c("Gender", "Gender", "SNOMED", "SNOMED", "SNOMED",
+                         "RxNorm", "LOINC", "Visit", "SNOMED"),
     standard_concept = "S"
   )
 
   # --- concept_ancestor ---------------------------------------------------
-  # 316139 (Heart failure) is its own descendant so the cohort SQL resolves.
+  # Seed 316139 has 3 descendants; only 316139 and 4229440 appear in the data,
+  # so ancestor coverage is 2/3. 316139 is its own descendant for cohort SQL.
   concept_ancestor <- data.frame(
-    ancestor_concept_id   = 316139L,
-    descendant_concept_id = 316139L,
-    min_levels_of_separation = 0L,
-    max_levels_of_separation = 0L
+    ancestor_concept_id      = 316139L,
+    descendant_concept_id    = c(316139L, 4229440L, 444031L),
+    min_levels_of_separation = c(0L, 1L, 1L),
+    max_levels_of_separation = c(0L, 1L, 1L)
   )
 
   # --- test_cohort (mirrors results.rwevalidate_test_cohort) -------------
@@ -122,6 +145,7 @@ setup_mock_cdm <- function(n = 12L) {
     condition_occurrence = condition_occurrence,
     drug_exposure        = drug_exposure,
     measurement          = measurement,
+    procedure_occurrence = procedure_occurrence,
     visit_occurrence     = visit_occurrence,
     death                = death,
     concept              = concept,

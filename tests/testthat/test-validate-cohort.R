@@ -52,6 +52,26 @@ test_that("missing connection args abort when no con is supplied", {
   )
 })
 
+test_that("concept_ids enables Module 1 and adds a third check row", {
+  skip_if_not_installed("duckdb")
+  con <- setup_mock_cdm()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+  td <- tempfile("rwe_vc_"); on.exit(unlink(td, recursive = TRUE), add = TRUE)
+
+  with_ids <- validate_cohort(
+    cdm_schema = "main", cohort_table = "test_cohort", con = con,
+    vocab_schema = "main", concept_ids = 316139, output_dir = td,
+    render_html = FALSE)
+  expect_false(is.null(with_ids$results$concepts))
+  expect_equal(nrow(with_ids$report$check_summary), 3L)
+
+  without <- validate_cohort(
+    cdm_schema = "main", cohort_table = "test_cohort", con = con,
+    vocab_schema = "main", output_dir = td, render_html = FALSE)
+  expect_null(without$results$concepts)
+  expect_equal(nrow(without$report$check_summary), 2L)
+})
+
 test_that("validate_cohort renders HTML when pandoc is available", {
   skip_if_not_installed("duckdb")
   skip_if_not(rmarkdown::pandoc_available(), "pandoc not available")

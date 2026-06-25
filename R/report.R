@@ -25,6 +25,8 @@ classify_status <- function(flags) {
 #' @export
 build_check_summary <- function(results) {
   spec <- list(
+    concepts  = list(section = "Concept Coverage",
+                     maps_to = "FDA Relevance - concept fitness"),
     attrition = list(section = "Cohort Attrition",
                      maps_to = "HARPER Sec.5 / RECORD-PE Item 6"),
     density   = list(section = "Temporal Data Density",
