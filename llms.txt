@@ -113,3 +113,4 @@ Render the HTML report, write the JSON sidecar, and build the summary.
 ### Articles
 
 - [Getting started with rwevalidate](getting-started.md):
+- [Validation: cohorts, datasets, and methodology](validation.md):
