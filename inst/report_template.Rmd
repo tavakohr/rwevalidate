@@ -26,6 +26,7 @@ res          <- params$results
 attrition    <- res$attrition
 density      <- res$density
 concepts     <- res$concepts
+covariates   <- res$covariates
 data_source  <- res$data_source
 check_sum    <- params$check_summary
 
@@ -197,10 +198,45 @@ if (!is.null(density) && nrow(density$followup_detail) > 0) {
 
 # 5. Covariate Feasibility
 
-*HARPER §4 — comparability and covariate availability.*
+*HARPER Sec.4 - comparability between target and comparator arms.*
 
-> **Planned for v0.2.** Runs only when a comparator cohort is supplied
-> (`comparator_id`). SMD love plot, prevalence table, and power calculation.
+```{r covariates, results='asis'}
+if (is.null(covariates)) {
+  cat("_Covariate feasibility was not run. Supply_ `comparator_id`",
+      "_to_ `validate_cohort()` _to enable Module 4._")
+} else {
+  pw <- covariates$power
+  cat(sprintf(
+    "**Power:** %s at n = %d (target) vs %d (comparator), assuming %.2f vs %.2f event rates (alpha = %.2f).\n\n",
+    ifelse(is.na(pw$power), "NA", format(pw$power)),
+    pw$n_target, pw$n_comparator, pw$assumed_p_target,
+    pw$assumed_p_comparator, pw$sig_level))
+
+  cat("**Standardized mean differences (baseline)**\n\n")
+  print(kbl(covariates$smd_table))
+
+  if (length(covariates$flags)) {
+    cat("\n\n**Flags**\n\n")
+    for (f in covariates$flags) cat("-", f, "\n")
+  }
+  cat("\n\n**Top covariate prevalence by arm**\n\n")
+  print(kbl(utils::head(covariates$prevalence_table, 20)))
+  cat("\n")
+}
+```
+
+```{r love-plot, eval=has_ggplot}
+if (!is.null(covariates) && nrow(covariates$smd_table) > 0) {
+  d <- covariates$smd_table[!is.na(covariates$smd_table$abs_smd), ]
+  d$covariate <- factor(d$covariate, levels = d$covariate[order(d$abs_smd)])
+  ggplot(d, aes(abs_smd, covariate)) +
+    geom_point(size = 2.5, colour = "#2c7fb8") +
+    geom_vline(xintercept = 0.1, linetype = "dashed", colour = "red") +
+    labs(title = "Love plot: absolute SMD by covariate",
+         x = "|SMD| (dashed line = 0.1 imbalance threshold)", y = NULL) +
+    theme_minimal()
+}
+```
 
 ---
 

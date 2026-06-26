@@ -110,14 +110,16 @@ setup_mock_cdm <- function(n = 12L) {
   # --- concept (minimal vocabulary) --------------------------------------
   concept <- data.frame(
     concept_id   = c(8507L, 8532L, 316139L, 4229440L, 444031L, 1308216L,
-                     3016723L, 9201L, 4107731L),
+                     3016723L, 9201L, 4107731L, 320128L),
     concept_name = c("MALE", "FEMALE", "Heart failure", "CHF",
                      "Acute HF (not in data)", "lisinopril",
-                     "Creatinine", "Inpatient Visit", "Procedure X"),
+                     "Creatinine", "Inpatient Visit", "Procedure X",
+                     "Essential hypertension"),
     domain_id        = c("Gender", "Gender", "Condition", "Condition",
-                         "Condition", "Drug", "Measurement", "Visit", "Procedure"),
+                         "Condition", "Drug", "Measurement", "Visit",
+                         "Procedure", "Condition"),
     vocabulary_id    = c("Gender", "Gender", "SNOMED", "SNOMED", "SNOMED",
-                         "RxNorm", "LOINC", "Visit", "SNOMED"),
+                         "RxNorm", "LOINC", "Visit", "SNOMED", "SNOMED"),
     standard_concept = "S"
   )
 
@@ -138,6 +140,49 @@ setup_mock_cdm <- function(n = 12L) {
     cohort_start_date     = cond_start,
     cohort_end_date       = cond_start + 200L
   )
+
+  # --- arm 2: comparator cohort (persons 13-24) --------------------------
+  # Deliberately younger and mostly male, with a hypertension comorbidity, so
+  # age/sex/comorbidity SMDs vs arm 1 are clearly non-zero. Arm 1 (persons 1-12)
+  # is left untouched so existing attrition/density/concept tests still hold.
+  arm2_ids   <- 13:24
+  arm2_index <- as.Date("2016-03-01")
+
+  person <- rbind(person, data.frame(
+    person_id            = arm2_ids,
+    gender_concept_id    = ifelse(arm2_ids == 24L, 8532L, 8507L),  # 11 male, 1 female
+    year_of_birth        = 1980L,
+    race_concept_id      = 0L,
+    ethnicity_concept_id = 0L))
+
+  observation_period <- rbind(observation_period, data.frame(
+    observation_period_id         = arm2_ids,
+    person_id                     = arm2_ids,
+    observation_period_start_date = as.Date("2014-01-01"),
+    observation_period_end_date   = as.Date("2018-01-01"),
+    period_type_concept_id        = 44814724L))
+
+  condition_occurrence <- rbind(condition_occurrence, data.frame(
+    condition_occurrence_id   = 200L + seq_along(arm2_ids),
+    person_id                 = arm2_ids,
+    condition_concept_id      = 320128L,            # hypertension, arm-2 comorbidity
+    condition_start_date      = arm2_index,
+    condition_end_date        = arm2_index + 10L,
+    condition_type_concept_id = 32020L))
+
+  drug_exposure <- rbind(drug_exposure, data.frame(
+    drug_exposure_id         = 200L + seq_along(arm2_ids),
+    person_id                = arm2_ids,
+    drug_concept_id          = 1308216L,
+    drug_exposure_start_date = arm2_index,
+    drug_exposure_end_date   = arm2_index + 30L,
+    drug_type_concept_id     = 38000177L))
+
+  test_cohort <- rbind(test_cohort, data.frame(
+    subject_id           = arm2_ids,
+    cohort_definition_id = 2L,
+    cohort_start_date    = arm2_index,
+    cohort_end_date      = arm2_index + 200L))
 
   tables <- list(
     person               = person,

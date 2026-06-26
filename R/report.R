@@ -30,7 +30,9 @@ build_check_summary <- function(results) {
     attrition = list(section = "Cohort Attrition",
                      maps_to = "HARPER Sec.5 / RECORD-PE Item 6"),
     density   = list(section = "Temporal Data Density",
-                     maps_to = "FDA Reliability - data accrual")
+                     maps_to = "FDA Reliability - data accrual"),
+    covariates = list(section = "Covariate Feasibility",
+                      maps_to = "HARPER Sec.4 - comparability")
   )
 
   rows <- lapply(names(spec), function(key) {

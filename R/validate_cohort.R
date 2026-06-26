@@ -52,8 +52,9 @@ build_data_source <- function(con, cdm_schema) {
 #'   Section 2. When `NULL` (default) Module 1 is skipped.
 #' @param concept_domain Domain the seed concepts live in (`"condition"`,
 #'   `"drug"`, `"measurement"`, `"procedure"`). Default `"condition"`.
-#' @param comparator_id Reserved for Module 4 (covariate feasibility, v0.2).
-#'   Currently ignored with a message if set.
+#' @param comparator_id Optional integer cohort definition id of a comparator
+#'   arm. When supplied, Module 4 (covariate feasibility) runs and populates
+#'   report Section 5. When `NULL` (default) Module 4 is skipped.
 #' @param obs_window Length-2 numeric `c(pre, post)` days for attrition prior
 #'   observation. Default `c(-365, 0)`.
 #' @param density_window Length-2 numeric `c(pre, post)` days for density.
@@ -108,10 +109,6 @@ validate_cohort <- function(cdm_schema,
     is.numeric(cohort_id), length(cohort_id) == 1,
     length(obs_window) == 2, length(density_window) == 2
   )
-  if (!is.null(comparator_id)) {
-    cli::cli_inform("{.arg comparator_id} is reserved for Module 4 (v0.2) and is ignored in this version.")
-  }
-
   # --- connection (open if not supplied) ----------------------------------
   owns_con <- is.null(con)
   if (owns_con) {
@@ -148,15 +145,27 @@ validate_cohort <- function(cdm_schema,
     cli::cli_inform("Module 1 (concept coverage) skipped; supply {.arg concept_ids} to enable.")
   }
 
+  covariates <- NULL
+  if (!is.null(comparator_id)) {
+    cli::cli_alert_info("Running covariate feasibility (Module 4)...")
+    covariates <- run_covariates(
+      con, cdm_schema = cdm_schema, cohort_table = cohort_table,
+      cohort_id = cohort_id, comparator_id = comparator_id,
+      vocab_schema = vocab_schema)
+  } else {
+    cli::cli_inform("Module 4 (covariate feasibility) skipped; supply {.arg comparator_id} to enable.")
+  }
+
   data_source <- build_data_source(con, cdm_schema)
 
   results <- list(
     data_source = data_source,
     concepts    = concepts,
     attrition   = attrition,
-    density     = density
+    density     = density,
+    covariates  = covariates
   )
-  all_flags <- c(concepts$flags, attrition$flags, density$flags)
+  all_flags <- c(concepts$flags, attrition$flags, density$flags, covariates$flags)
 
   # --- report -------------------------------------------------------------
   run_date <- Sys.time()

@@ -47,8 +47,9 @@ Section 2. When \code{NULL} (default) Module 1 is skipped.}
 \item{concept_domain}{Domain the seed concepts live in (\code{"condition"},
 \code{"drug"}, \code{"measurement"}, \code{"procedure"}). Default \code{"condition"}.}
 
-\item{comparator_id}{Reserved for Module 4 (covariate feasibility, v0.2).
-Currently ignored with a message if set.}
+\item{comparator_id}{Optional integer cohort definition id of a comparator
+arm. When supplied, Module 4 (covariate feasibility) runs and populates
+report Section 5. When \code{NULL} (default) Module 4 is skipped.}
 
 \item{obs_window}{Length-2 numeric \code{c(pre, post)} days for attrition prior
 observation. Default \code{c(-365, 0)}.}

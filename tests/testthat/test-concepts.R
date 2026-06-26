@@ -1,6 +1,11 @@
 # Mock vocab: seed 316139 has descendants {316139, 4229440, 444031}; only the
 # first two appear in condition_occurrence (coverage 2/3). One unmapped condition
 # row and one unmapped procedure row exercise mapping rates.
+#
+# The mock has 24 persons total (arm 1 = 1-12 with HF, arm 2 = 13-24 with
+# hypertension), and 27 condition rows: 12 (316139) + 2 (4229440) + 1 (unmapped)
+# in arm 1, plus 12 (320128) in arm 2. Only the 12 arm-1 persons have an HF
+# descendant, so HF prevalence is 12/24 = 50%.
 
 test_that("run_concepts returns the documented structure", {
   skip_if_not_installed("duckdb")
@@ -23,8 +28,8 @@ test_that("prevalence counts persons with a descendant-set record", {
                       cohort_id = 1, concept_ids = 316139, vocab_schema = "main")
 
   expect_identical(res$prevalence$n_with, 12L)
-  expect_identical(res$prevalence$n_total, 12L)
-  expect_equal(res$prevalence$pct, 100)
+  expect_identical(res$prevalence$n_total, 24L)
+  expect_equal(res$prevalence$pct, 50)
 })
 
 test_that("ancestor coverage reports present vs total descendants", {
@@ -49,7 +54,7 @@ test_that("mapping rate detects unmapped records and flags a sparse domain", {
                       cohort_id = 1, concept_ids = 316139, vocab_schema = "main")
 
   cond <- res$mapping_by_domain[res$mapping_by_domain$domain == "condition", ]
-  expect_equal(cond$n_records, 15L)
+  expect_equal(cond$n_records, 27L)
   expect_equal(cond$n_unmapped, 1L)
 
   proc <- res$mapping_by_domain[res$mapping_by_domain$domain == "procedure", ]
