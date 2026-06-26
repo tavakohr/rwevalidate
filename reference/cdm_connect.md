@@ -1,10 +1,13 @@
 # Connect to an OMOP CDM database
 
 Opens a PostgreSQL connection via `RPostgres` and validates that the
-required CDM tables (`person`, `observation_period`,
+required clinical tables (`person`, `observation_period`,
 `condition_occurrence`, `drug_exposure`, `measurement`,
-`visit_occurrence`, `death`, `concept`, `concept_ancestor`) exist in
-`cdm_schema` before returning.
+`visit_occurrence`, `death`) exist in `cdm_schema` and the vocabulary
+tables (`concept`, `concept_ancestor`) exist in `vocab_schema` before
+returning. For split-schema CDMs (clinical and vocabulary in different
+schemas) pass `vocab_schema`; it defaults to `cdm_schema` for
+single-schema builds.
 
 ## Usage
 
@@ -15,7 +18,8 @@ cdm_connect(
   dbname,
   user,
   password,
-  cdm_schema
+  cdm_schema,
+  vocab_schema = cdm_schema
 )
 ```
 
@@ -43,7 +47,11 @@ cdm_connect(
 
 - cdm_schema:
 
-  Schema holding the CDM tables, used for table validation.
+  Schema holding the clinical CDM tables.
+
+- vocab_schema:
+
+  Schema holding the vocabulary tables. Defaults to `cdm_schema`.
 
 ## Value
 
@@ -55,7 +63,7 @@ A live `DBI` connection to the CDM database.
 if (FALSE) { # \dontrun{
 con <- cdm_connect(
   dbname = "omop", user = "me", password = "secret",
-  cdm_schema = "mimic_cdm"
+  cdm_schema = "mimiciv_omop", vocab_schema = "vocab"
 )
 cdm_disconnect(con)
 } # }
