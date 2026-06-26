@@ -1,5 +1,12 @@
 # rwevalidate
 
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/tavakohr/rwevalidate/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tavakohr/rwevalidate/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/tavakohr/rwevalidate/graph/badge.svg)](https://app.codecov.io/gh/tavakohr/rwevalidate)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
+
 Validate patient cohorts for real-world-evidence (RWE) studies on OMOP CDM data.
 
 One function call produces a structured HTML + JSON validation report aligned with

@@ -1,0 +1,34 @@
+url: ~
+template:
+  bootstrap: 5
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - getting-started
+
+reference:
+- title: Entry point
+  desc: One call that runs the whole validation pipeline and writes the report.
+  contents:
+  - validate_cohort
+- title: Connection
+  desc: Open and close a CDM connection with table validation.
+  contents:
+  - cdm_connect
+  - cdm_disconnect
+- title: Validation modules
+  desc: The four checks, callable individually.
+  contents:
+  - run_concepts
+  - run_attrition
+  - run_density
+  - run_covariates
+- title: Reporting
+  desc: Render the HTML report, write the JSON sidecar, and build the summary.
+  contents:
+  - render_validation_report
+  - write_results_json
+  - build_check_summary
+  - classify_status

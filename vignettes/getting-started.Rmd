@@ -1,0 +1,117 @@
+---
+title: "Getting started with rwevalidate"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with rwevalidate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
+```
+
+`rwevalidate` validates an **already-instantiated** patient cohort on an OMOP
+CDM database for real-world-evidence (RWE) use, and produces a structured HTML +
+JSON report aligned with FDA RWE guidance (Relevance and Reliability) and the
+HARPER protocol framework. It does **not** generate cohorts -- the cohort
+definition (SQL or ATLAS) stays upstream.
+
+The code below is not executed when the vignette is built (it needs a live
+database); it is the exact sequence you would run against your own CDM.
+
+## 1. Connect
+
+`cdm_connect()` opens a PostgreSQL connection and verifies the required clinical
+tables exist in `cdm_schema` before returning.
+
+```{r}
+library(rwevalidate)
+
+con <- cdm_connect(
+  host       = "localhost",
+  port       = 5432,
+  dbname     = "your_db",
+  user       = "your_user",
+  password   = "your_password",
+  cdm_schema = "mimic_cdm"
+)
+```
+
+Many CDM builds are **split-schema**: clinical tables in one schema and the
+vocabulary (`concept`, `concept_ancestor`) in another. Pass the vocabulary
+schema via `vocab_schema` (default `"vocab"`).
+
+## 2. Instantiate a cohort (upstream)
+
+`rwevalidate` reads a cohort table with the columns `subject_id`,
+`cohort_definition_id`, `cohort_start_date`, `cohort_end_date`. For example, a
+heart-failure cohort using SNOMED concept 316139 and its descendants:
+
+```{r}
+DBI::dbExecute(con, "
+  CREATE TABLE results.my_cohort AS
+  SELECT person_id AS subject_id, 1 AS cohort_definition_id,
+         MIN(condition_start_date) AS cohort_start_date,
+         MAX(condition_end_date)   AS cohort_end_date
+  FROM mimic_cdm.condition_occurrence
+  WHERE condition_concept_id IN (
+    SELECT descendant_concept_id FROM vocab.concept_ancestor
+    WHERE ancestor_concept_id = 316139)
+  GROUP BY person_id")
+```
+
+## 3. Validate in one call
+
+`validate_cohort()` runs the modules and writes the report. Supply an open `con`
+or the connection arguments directly.
+
+```{r}
+results <- validate_cohort(
+  cdm_schema    = "mimic_cdm",
+  cohort_table  = "results.my_cohort",
+  cohort_id     = 1,
+  concept_ids   = 316139,   # enables Module 1 (concept coverage)
+  comparator_id = 2,        # enables Module 4 (covariate feasibility)
+  vocab_schema  = "vocab",
+  output_dir    = "./validation_report",
+  con           = con
+)
+```
+
+This writes `validation_report.html` and `validation_results.json` to
+`output_dir`, and returns a list with `results` (per-module output),
+`report` (paths + traffic-light summary), and `flags`.
+
+```{r}
+results$report$check_summary   # one row per check: pass / warn / fail
+results$flags                  # all WARN:/FAIL: messages
+```
+
+## 4. Run modules individually
+
+Each module is also callable on its own when you only need one view.
+
+```{r}
+run_attrition(con, "mimic_cdm", "results.my_cohort", cohort_id = 1,
+              vocab_schema = "vocab")
+
+run_density(con, "mimic_cdm", "results.my_cohort", cohort_id = 1)
+
+run_concepts(con, "mimic_cdm", "results.my_cohort", cohort_id = 1,
+             concept_ids = 316139, vocab_schema = "vocab")
+
+run_covariates(con, "mimic_cdm", "results.my_cohort", cohort_id = 1,
+               comparator_id = 2, vocab_schema = "vocab")
+```
+
+## 5. Interpreting the traffic light
+
+Every check returns `"pass"` (green), `"warn"` (amber), or `"fail"` (red).
+Thresholds are documented arguments -- for example prior-observation coverage
+warns below 70% and fails below 50%, and covariates with `|SMD| > 0.1` are
+flagged as imbalanced. Tune them to your study's requirements.
+
+```{r}
+cdm_disconnect(con)
+```

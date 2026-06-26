@@ -1,0 +1,22 @@
+# Codecov configuration for rwevalidate.
+# Project status compares against previous coverage (only a real drop fails);
+# patch holds new/changed lines to a higher bar.
+
+coverage:
+  precision: 1
+  round: nearest
+  range: "60...90"
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+
+comment:
+  layout: "reach, diff, files"
+  behavior: default
+  require_changes: false
