@@ -1,0 +1,115 @@
+# rwevalidate
+
+Validate patient cohorts for real-world-evidence (RWE) studies on OMOP
+CDM data.
+
+One function call produces a structured HTML + JSON validation report
+aligned with FDA RWE guidance (Relevance + Reliability) and HARPER
+protocol requirements.
+
+> **Status:** v0.1 core complete — attrition (Module 2), temporal
+> density (Module 3), HTML + JSON report, and the
+> [`validate_cohort()`](reference/validate_cohort.md) entry point.
+> Concept coverage (Module 1) and covariate feasibility (Module 4) are
+> v0.2.
+
+## Installation
+
+``` r
+
+# from a local clone
+install.packages(".", repos = NULL, type = "source")
+```
+
+Requires R (\>= 4.1) and the packages under `Imports` in `DESCRIPTION`.
+HTML rendering needs Pandoc (bundled with RStudio; otherwise set
+`RSTUDIO_PANDOC`). Without Pandoc the JSON sidecar is still written.
+
+## Quick start — one call
+
+``` r
+
+library(rwevalidate)
+
+out <- validate_cohort(
+  cdm_schema     = "mimic_cdm",                       # clinical schema
+  cohort_table   = "results.rwevalidate_test_cohort",
+  cohort_id      = 1,
+  vocab_schema   = "vocab",                           # vocabulary schema (split-schema CDMs)
+  obs_window     = c(-365, 0),                        # prior-observation window (attrition)
+  density_window = c(-365, 365),                      # window for data density
+  output_dir     = "./validation_report",
+  # PostgreSQL connection args (omit if passing an open `con=`):
+  host = "localhost", port = 5432,
+  dbname = "<your_db>", user = "<your_user>", password = "<your_password>"
+)
+
+out$flags                  # collected WARN:/FAIL: messages
+out$report$check_summary   # traffic-light table
+# -> ./validation_report/validation_report.html  + validation_results.json
+```
+
+Already have a connection (e.g. a DuckDB test instance)? Pass it as
+`con=` and it is left open for you. Lower-level helpers —
+[`cdm_connect()`](reference/cdm_connect.md),
+[`run_attrition()`](reference/run_attrition.md),
+[`run_density()`](reference/run_density.md),
+[`render_validation_report()`](reference/render_validation_report.md) —
+can also be called directly.
+
+## Scope
+
+- **Cohort input:** instantiated cohort tables (no ATLAS JSON parsing in
+  v0.1).
+- **CDM version:** targets v5.3.1 (MIMIC-IV reference environment).
+- **Split-schema aware:** clinical (`cdm_schema`) and vocabulary
+  (`vocab_schema`) may live in separate schemas.
+- **No OHDSI tool dependencies:** does not import CohortDiagnostics,
+  DQD, or Achilles.
+
+# Package index
+
+## Entry point
+
+One call that runs the whole validation pipeline and writes the report.
+
+- [`validate_cohort()`](validate_cohort.md) : Validate a patient cohort
+  for real-world-evidence use
+
+## Connection
+
+Open and close a CDM connection with table validation.
+
+- [`cdm_connect()`](cdm_connect.md) : Connect to an OMOP CDM database
+- [`cdm_disconnect()`](cdm_disconnect.md) : Disconnect from a CDM
+  database
+
+## Validation modules
+
+The four checks, callable individually.
+
+- [`run_concepts()`](run_concepts.md) : Module 1 - Concept Coverage
+- [`run_attrition()`](run_attrition.md) : Module 2 - Cohort Attrition
+  Audit
+- [`run_density()`](run_density.md) : Module 3 - Temporal Data Density
+- [`run_covariates()`](run_covariates.md) : Module 4 - Covariate
+  Feasibility
+
+## Reporting
+
+Render the HTML report, write the JSON sidecar, and build the summary.
+
+- [`render_validation_report()`](render_validation_report.md) : Render
+  the validation report (HTML) and write the JSON sidecar
+- [`write_results_json()`](write_results_json.md) : Write the JSON
+  sidecar (no rendering)
+- [`build_check_summary()`](build_check_summary.md) : Build the
+  traffic-light validation summary table
+- [`classify_status()`](classify_status.md) : Classify a vector of
+  module flags into a traffic-light status
+
+# Articles
+
+### Articles
+
+- [Getting started with rwevalidate](getting-started.md):
