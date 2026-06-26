@@ -1,0 +1,6 @@
+"cohort_id","phenotype","n_target","status","fail","warn","elapsed_s","detail"
+288,"t2dm",645,"ok",1,2,11.4,"4 checks"
+1103,"cardiac_valve_af",481,"ok",1,2,11.71,"4 checks"
+736,"acute_liver_injury",849,"ok",1,2,12.87,"4 checks"
+253,"drug_pancreatitis",485,"ok",1,2,10.94,"4 checks"
+1009,"trd",775,"ok",1,2,13.62,"4 checks"
