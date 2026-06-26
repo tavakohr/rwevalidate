@@ -10,7 +10,8 @@ cdm_connect(
   dbname,
   user,
   password,
-  cdm_schema
+  cdm_schema,
+  vocab_schema = cdm_schema
 )
 }
 \arguments{
@@ -24,22 +25,28 @@ cdm_connect(
 
 \item{password}{Database password.}
 
-\item{cdm_schema}{Schema holding the CDM tables, used for table validation.}
+\item{cdm_schema}{Schema holding the clinical CDM tables.}
+
+\item{vocab_schema}{Schema holding the vocabulary tables. Defaults to
+\code{cdm_schema}.}
 }
 \value{
 A live \code{DBI} connection to the CDM database.
 }
 \description{
 Opens a PostgreSQL connection via \code{RPostgres} and validates that the required
-CDM tables (\code{person}, \code{observation_period}, \code{condition_occurrence},
-\code{drug_exposure}, \code{measurement}, \code{visit_occurrence}, \code{death}, \code{concept},
-\code{concept_ancestor}) exist in \code{cdm_schema} before returning.
+clinical tables (\code{person}, \code{observation_period}, \code{condition_occurrence},
+\code{drug_exposure}, \code{measurement}, \code{visit_occurrence}, \code{death}) exist in
+\code{cdm_schema} and the vocabulary tables (\code{concept}, \code{concept_ancestor}) exist
+in \code{vocab_schema} before returning. For split-schema CDMs (clinical and
+vocabulary in different schemas) pass \code{vocab_schema}; it defaults to
+\code{cdm_schema} for single-schema builds.
 }
 \examples{
 \dontrun{
 con <- cdm_connect(
   dbname = "omop", user = "me", password = "secret",
-  cdm_schema = "mimic_cdm"
+  cdm_schema = "mimiciv_omop", vocab_schema = "vocab"
 )
 cdm_disconnect(con)
 }

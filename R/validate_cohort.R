@@ -117,7 +117,8 @@ validate_cohort <- function(cdm_schema,
         "Provide an open {.arg con}, or {.arg dbname}/{.arg user}/{.arg password} to open one.")
     }
     con <- cdm_connect(host = host, port = port, dbname = dbname,
-                       user = user, password = password, cdm_schema = cdm_schema)
+                       user = user, password = password, cdm_schema = cdm_schema,
+                       vocab_schema = vocab_schema)
     on.exit(cdm_disconnect(con), add = TRUE)
   } else {
     stopifnot(DBI::dbIsValid(con))
