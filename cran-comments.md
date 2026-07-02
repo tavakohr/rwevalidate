@@ -6,17 +6,21 @@ HTML and JSON report.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes, on local Windows (R 4.4.2).
+On win-builder (R-release 4.6.1 and R-devel): 0 errors | 0 warnings | 1 note.
 
-The two notes are both about the local environment, not the package:
+The note is the standard "New submission" note, together with two sub-items that
+are false positives:
 
-* "New submission" is expected for a first release.
-* "unable to verify current time" comes from the check machine having no
-  network time source.
+* Possibly misspelled words in DESCRIPTION: "CDM", "OMOP", "RWE", "comparator",
+  and "Langan". These are correct. "OMOP" and "CDM" are the OMOP Common Data
+  Model and its abbreviation, "RWE" is real-world evidence, "comparator" is the
+  standard epidemiological term for the reference arm, and "Langan" is an author
+  surname in a cited reference.
 
-A local run also reported the optional "qpdf is needed for checks on size
-reduction of PDFs" note. That is a missing local tool, not a package issue, and
-does not appear on the CRAN check machines that have qpdf installed.
+A local Windows run additionally reported "unable to verify current time" (no
+network time source on that machine) and "qpdf is needed for checks on size
+reduction of PDFs" (qpdf not installed locally). Neither appears on the CRAN or
+win-builder machines.
 
 ## Examples
 
