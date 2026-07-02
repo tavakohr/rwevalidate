@@ -323,4 +323,4 @@ The CI pipeline on GitHub Actions runs `R CMD check` on Ubuntu, builds coverage 
 
 ## License
 
-MIT. See [LICENSE](LICENSE.md).
+MIT. See [LICENSE](https://github.com/tavakohr/rwevalidate/blob/main/LICENSE.md).

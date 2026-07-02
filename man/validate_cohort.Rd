@@ -84,7 +84,25 @@ arguments (\code{dbname}, \code{user}, \code{password}, ...). Connections opened
 are closed on exit; a connection passed in via \code{con} is left open.
 }
 \examples{
+# Runnable demo on a small in-memory DuckDB CDM (no database needed).
+# render_html = FALSE writes only the JSON sidecar, so Pandoc is not required.
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  out <- validate_cohort(
+    cdm_schema   = "main",
+    cohort_table = "cohort",
+    cohort_id    = 1,
+    con          = con,
+    vocab_schema = "main",
+    output_dir   = tempfile("rwe_demo_"),
+    render_html  = FALSE
+  )
+  print(out$report$check_summary)
+  cdm_disconnect(con)
+}
+
 \dontrun{
+# Against a live PostgreSQL OMOP CDM:
 validate_cohort(
   cdm_schema   = "mimic_cdm",
   cohort_table = "results.rwevalidate_test_cohort",
