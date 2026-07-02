@@ -4,6 +4,12 @@
 #' observation coverage, and demographics at index. Maps to HARPER section 5 and
 #' RECORD-PE item 6. All thresholds are arguments.
 #'
+#' This profiles the cohort as it was handed in. It reports the cohort-level
+#' counts that item 6 asks for, but it does not yet rebuild a step-by-step
+#' attrition flowchart (how many subjects each inclusion or exclusion criterion
+#' removed), because the cohort table does not carry the criteria that built it.
+#' Per-criterion attrition is planned for a later version.
+#'
 #' @param con A live `DBI` connection (see [cdm_connect()]).
 #' @param cdm_schema Schema holding the clinical CDM tables (e.g. `"mimic_cdm"`).
 #' @param cohort_table Cohort table, schema-qualified
@@ -27,7 +33,10 @@
 #'   \describe{
 #'     \item{cohort_size}{integer - distinct subjects in the cohort}
 #'     \item{index_date_summary}{data.frame of `index_year`, `n`}
-#'     \item{obs_coverage}{data.frame: `cohort_n`, `n_sufficient`, `pct_sufficient`, `min_prior_days`}
+#'     \item{obs_coverage}{data.frame: `cohort_n`, `n_sufficient`, `pct_sufficient`, `min_prior_days`.
+#'       `cohort_n` counts every cohort subject. A subject whose index date falls
+#'       outside any observation period counts as insufficient prior observation
+#'       rather than being dropped, so `cohort_n` matches `cohort_size`.}
 #'     \item{demographics}{data.frame: `sex`, `mean_age`, `min_age`, `max_age`, `n`}
 #'     \item{flags}{character vector of `WARN:`/`FAIL:` messages (empty if all pass)}
 #'   }
@@ -48,6 +57,9 @@ run_attrition <- function(con,
     length(obs_window) == 2,
     is.numeric(cohort_id), length(cohort_id) == 1
   )
+  check_ident(cdm_schema, "cdm_schema")
+  check_ident(vocab_schema, "vocab_schema")
+  check_ident(cohort_table, "cohort_table")
   cohort_id <- as.integer(cohort_id)
   min_prior_days <- abs(as.integer(obs_window[1]))
   flags <- character(0)
@@ -85,7 +97,7 @@ run_attrition <- function(con,
            c.subject_id,
            c.cohort_start_date - op.observation_period_start_date AS prior_days
          FROM {cohort_table} c
-         JOIN {cdm_schema}.observation_period op
+         LEFT JOIN {cdm_schema}.observation_period op
            ON c.subject_id = op.person_id
           AND c.cohort_start_date BETWEEN op.observation_period_start_date
                                       AND op.observation_period_end_date

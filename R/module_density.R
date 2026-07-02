@@ -86,6 +86,8 @@ run_density <- function(con,
     length(obs_window) == 2,
     is.numeric(cohort_id), length(cohort_id) == 1
   )
+  check_ident(cdm_schema, "cdm_schema")
+  check_ident(cohort_table, "cohort_table")
   cohort_id <- as.integer(cohort_id)
   flags <- character(0)
 
@@ -109,17 +111,22 @@ run_density <- function(con,
         records_per_patient = numeric(0), stringsAsFactors = FALSE
       )
     }
-
-    total_records <- sum(df$n_records)
-    if (total_records < sparse_warn_min) {
-      flags[[length(flags) + 1L]] <<- glue::glue(
-        "WARN: Domain '{dom}' has {total_records} records in the observation window (possible missing/sparse domain)."
-      )
-    }
     df
   })
   density_by_domain <- do.call(rbind, parts)
   rownames(density_by_domain) <- NULL
+
+  # Flag any domain whose total record count in the window is below the sparse
+  # threshold (a likely missing or under-populated domain). Done in one pass
+  # over the assembled table so the loop above stays a pure map.
+  for (dom in names(DENSITY_DOMAINS)) {
+    total_records <- sum(density_by_domain$n_records[density_by_domain$domain == dom])
+    if (total_records < sparse_warn_min) {
+      flags <- c(flags, glue::glue(
+        "WARN: Domain '{dom}' has {total_records} records in the observation window (possible missing/sparse domain)."
+      ))
+    }
+  }
 
   # --- 3b. Follow-up completeness -----------------------------------------
   followup_detail <- DBI::dbGetQuery(con, glue::glue(
@@ -128,14 +135,16 @@ run_density <- function(con,
         c.cohort_start_date,
         c.cohort_end_date,
         op.observation_period_end_date,
-        LEAST(c.cohort_end_date, op.observation_period_end_date) AS effective_end_date,
+        LEAST(c.cohort_end_date,
+              COALESCE(op.observation_period_end_date, c.cohort_end_date)) AS effective_end_date,
         CASE
+          WHEN op.person_id IS NULL THEN 'no_observation'
           WHEN d.person_id IS NOT NULL THEN 'death'
           WHEN c.cohort_end_date <= op.observation_period_end_date THEN 'cohort_exit'
           ELSE 'end_of_data'
         END AS censoring_reason
        FROM {cohort_table} c
-       JOIN {cdm_schema}.observation_period op
+       LEFT JOIN {cdm_schema}.observation_period op
          ON c.subject_id = op.person_id
         AND c.cohort_start_date BETWEEN op.observation_period_start_date
                                     AND op.observation_period_end_date

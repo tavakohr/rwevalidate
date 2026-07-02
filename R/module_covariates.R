@@ -90,6 +90,7 @@ date_col <- function(table) {
 #' @param power_baseline_rate,power_effect_rate Assumed comparator and target
 #'   event rates for the two-proportion power calculation. Defaults 0.15, 0.30.
 #' @param power_sig_level Significance level for the power calculation. Default 0.05.
+#' @param power_warn_threshold Power below this value flags a `WARN`. Default 0.80.
 #'
 #' @return A named list: `smd_table`, `prevalence_table`, `power`, `flags`.
 #' @export
@@ -104,7 +105,8 @@ run_covariates <- function(con,
                            smd_warn_threshold = 0.1,
                            power_baseline_rate = 0.15,
                            power_effect_rate = 0.30,
-                           power_sig_level = 0.05) {
+                           power_sig_level = 0.05,
+                           power_warn_threshold = 0.80) {
 
   stopifnot(
     DBI::dbIsValid(con),
@@ -112,8 +114,15 @@ run_covariates <- function(con,
     is.numeric(comparator_id), length(comparator_id) == 1,
     length(covariate_window) == 2
   )
+  check_ident(cdm_schema, "cdm_schema")
+  check_ident(vocab_schema, "vocab_schema")
+  check_ident(cohort_table, "cohort_table")
   cid_t <- as.integer(cohort_id)
   cid_c <- as.integer(comparator_id)
+  if (identical(cid_t, cid_c)) {
+    cli::cli_abort(
+      "{.arg comparator_id} must differ from {.arg cohort_id} (both are {cid_t}).")
+  }
   pre   <- as.integer(covariate_window[1])
   post  <- as.integer(covariate_window[2])
   flags <- character(0)
@@ -130,12 +139,13 @@ run_covariates <- function(con,
       WHERE c.cohort_definition_id IN ({cid_t}, {cid_c})
       GROUP BY c.cohort_definition_id"
   ))
-  t <- demo[demo$arm == cid_t, ]
-  c_ <- demo[demo$arm == cid_c, ]
-  if (nrow(t) == 0 || nrow(c_) == 0) {
+  arm_t <- demo[demo$arm == cid_t, ]
+  arm_c <- demo[demo$arm == cid_c, ]
+  if (nrow(arm_t) == 0 || nrow(arm_c) == 0) {
     cli::cli_abort("Both arms must be present: target {cid_t} and comparator {cid_c}.")
   }
-  n_t <- as.integer(t$n); n_c <- as.integer(c_$n)
+  n_t <- as.integer(arm_t$n)
+  n_c <- as.integer(arm_c$n)
 
   # --- top comorbidities (conditions) for SMD + prevalence ---------------
   cond <- concept_presence_by_arm(
@@ -154,12 +164,13 @@ run_covariates <- function(con,
   # --- SMD table (age + sex + comorbidities) -----------------------------
   smd_rows <- list(
     data.frame(covariate = "Age (years)", type = "continuous",
-               arm1 = round(t$mean_age, 2), arm2 = round(c_$mean_age, 2),
-               smd = smd_continuous(t$mean_age, c_$mean_age, t$sd_age, c_$sd_age),
+               arm1 = round(arm_t$mean_age, 2), arm2 = round(arm_c$mean_age, 2),
+               smd = smd_continuous(arm_t$mean_age, arm_c$mean_age,
+                                    arm_t$sd_age, arm_c$sd_age),
                stringsAsFactors = FALSE),
     data.frame(covariate = "Female", type = "binary",
-               arm1 = round(t$p_female, 3), arm2 = round(c_$p_female, 3),
-               smd = smd_binary(t$p_female, c_$p_female),
+               arm1 = round(arm_t$p_female, 3), arm2 = round(arm_c$p_female, 3),
+               smd = smd_binary(arm_t$p_female, arm_c$p_female),
                stringsAsFactors = FALSE)
   )
   if (nrow(cond) > 0) {
@@ -181,14 +192,24 @@ run_covariates <- function(con,
   }
 
   # --- prevalence table (conditions + drugs) -----------------------------
-  prevalence_table <- rbind(
+  # Filter out the empty domains first so a run with no coded covariates in
+  # either domain returns a typed empty data.frame instead of erroring on
+  # rownames(NULL).
+  prevalence_parts <- Filter(Negate(is.null), list(
     if (nrow(cond) > 0) data.frame(domain = "condition", concept_id = cond$cid,
       concept_name = cond$concept_name, arm1_pct = cond$arm1_pct,
       arm2_pct = cond$arm2_pct, stringsAsFactors = FALSE),
     if (nrow(drug) > 0) data.frame(domain = "drug", concept_id = drug$cid,
       concept_name = drug$concept_name, arm1_pct = drug$arm1_pct,
       arm2_pct = drug$arm2_pct, stringsAsFactors = FALSE)
-  )
+  ))
+  prevalence_table <- if (length(prevalence_parts) > 0) {
+    do.call(rbind, prevalence_parts)
+  } else {
+    data.frame(domain = character(0), concept_id = integer(0),
+               concept_name = character(0), arm1_pct = numeric(0),
+               arm2_pct = numeric(0), stringsAsFactors = FALSE)
+  }
   rownames(prevalence_table) <- NULL
 
   # --- power calculation -------------------------------------------------
@@ -202,9 +223,9 @@ run_covariates <- function(con,
     assumed_p_target = power_effect_rate, assumed_p_comparator = power_baseline_rate,
     sig_level = power_sig_level, power = power_val, stringsAsFactors = FALSE)
 
-  if (!is.na(power_val) && power_val < 0.8) {
+  if (!is.na(power_val) && power_val < power_warn_threshold) {
     flags <- c(flags, glue::glue(
-      "WARN: Estimated power {power_val} < 0.80 at n = {min(n_t, n_c)} per arm (assumed {power_baseline_rate} vs {power_effect_rate})."))
+      "WARN: Estimated power {power_val} < {power_warn_threshold} at n = {min(n_t, n_c)} per arm (assumed {power_baseline_rate} vs {power_effect_rate})."))
   }
 
   list(

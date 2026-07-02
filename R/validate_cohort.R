@@ -159,6 +159,18 @@ validate_cohort <- function(cdm_schema,
 
   data_source <- build_data_source(con, cdm_schema)
 
+  # rwevalidate targets OMOP CDM v5.3.1. Warn (do not stop) on other versions,
+  # since a mislabelled or v5.4 CDM may have tables/columns it does not query.
+  if (!is.null(data_source) &&
+      length(data_source$cdm_version) == 1 &&
+      !is.na(data_source$cdm_version) &&
+      !grepl("^v?5\\.3", as.character(data_source$cdm_version))) {
+    cli::cli_warn(c(
+      "CDM version {.val {data_source$cdm_version}} is outside the tested 5.3.x range.",
+      "i" = "rwevalidate targets OMOP CDM v5.3.1; other versions may include tables or columns it does not query."
+    ))
+  }
+
   results <- list(
     data_source = data_source,
     concepts    = concepts,

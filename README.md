@@ -52,7 +52,7 @@ HARPER is a structured protocol template designed to make pharmacoepidemiology R
 Benchimol EI, Smeeth L, Guttmann A, et al. *The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) Statement.* PLoS Med. 2015;12(10):e1001885.
 Garbe E, Andersen M, Bhimraj A, et al. *RECORD-PE: Reporting of pharmacoepidemiology studies using routinely collected health data.* BMJ. 2018;363:k4538.
 
-Item 6 of the RECORD-PE checklist requires a patient flowchart showing how many individuals were identified at each stage of cohort construction and why they were excluded. The attrition table and flag output from `run_attrition()` are designed to populate this item.
+Item 6 of the RECORD-PE checklist requires a patient flowchart showing how many individuals were identified at each stage of cohort construction and why they were excluded. `run_attrition()` reports the cohort-level counts this item asks for (size, index dates, prior observation, demographics). It does not yet rebuild the step-by-step flowchart itself, because the instantiated cohort table does not carry the criteria that produced it. Per-criterion attrition is planned for a later version.
 
 ---
 
@@ -299,10 +299,11 @@ Section 2 is populated only when `concept_ids` is supplied. Section 5 is populat
 
 ## Scope and Compatibility
 
-- **CDM version:** OMOP CDM v5.3.1 (the v5.4 episode tables are not used).
+- **CDM version:** OMOP CDM v5.3.1 (the v5.4 episode tables are not used). `validate_cohort()` warns if the connected CDM reports a version outside 5.3.x.
 - **Databases:** PostgreSQL (primary). DuckDB is supported for testing via the `testthat` mock.
+- **SQL dialect:** Queries are written in PostgreSQL and DuckDB SQL and run directly through `DBI`. They are not yet translated with `SqlRender`, so other OHDSI backends (SQL Server, Redshift, Oracle, BigQuery) are not supported in this version. Multi-dialect support via `SqlRender` is on the roadmap for OHDSI network use.
 - **Cohort input:** Instantiated cohort tables only. The table must have `subject_id`, `cohort_definition_id`, `cohort_start_date`, and `cohort_end_date` columns. ATLAS JSON parsing is not supported.
-- **No OHDSI tool chain required:** The package imports only standard CRAN packages (DBI, RPostgres, dplyr, ggplot2, gt, jsonlite, rmarkdown, glue, cli, rlang) and does not require CohortDiagnostics, DataQualityDashboard, Achilles, or DatabaseConnector.
+- **No OHDSI tool chain required:** The package imports only lightweight CRAN packages (DBI, RPostgres, jsonlite, rmarkdown, glue, cli, utils; ggplot2 is a soft dependency used only for report plots) and does not require CohortDiagnostics, DataQualityDashboard, Achilles, or DatabaseConnector.
 
 ---
 

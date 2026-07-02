@@ -7,8 +7,8 @@
 run_concepts(
   con,
   cdm_schema,
-  cohort_table,
-  cohort_id,
+  cohort_table = NULL,
+  cohort_id = NULL,
   concept_ids,
   domain = "condition",
   vocab_schema = "vocab",
@@ -22,10 +22,11 @@ run_concepts(
 
 \item{cdm_schema}{Schema holding the clinical CDM tables.}
 
-\item{cohort_table}{Cohort table, schema-qualified (currently unused; reserved
-for cohort-restricted prevalence in a later version).}
+\item{cohort_table}{Cohort table, schema-qualified. Optional and currently
+unused; reserved for cohort-restricted prevalence in a later version.}
 
-\item{cohort_id}{Integer cohort definition id (reserved, see \code{cohort_table}).}
+\item{cohort_id}{Integer cohort definition id. Optional and reserved, see
+\code{cohort_table}.}
 
 \item{concept_ids}{Numeric vector of cohort-defining seed concept id(s). Their
 descendants are expanded via \verb{\{vocab_schema\}.concept_ancestor}.}
