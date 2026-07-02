@@ -1,6 +1,7 @@
 ^\.Renviron\.example$
 ^\.git$
 ^\.gitignore$
+^LICENSE\.md$
 ^\.github$
 ^_pkgdown\.yml$
 ^codecov\.yml$
