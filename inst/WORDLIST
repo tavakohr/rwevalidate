@@ -1,6 +1,5 @@
 BMJ
 Benchimol
-Bhimraj
 CDM
 CDMs
 CMD
@@ -11,11 +10,11 @@ DatabaseConnector
 DuckDB
 EI
 Eunomia
-Garbe
 GiBleed
 Guttmann
 HARmonized
-Harrigan
+ISPE
+ISPOR
 JSON
 Langan
 Lifecycle
@@ -25,6 +24,7 @@ PLoS
 Pandoc
 Pharmacoepidemiol
 PhysioNet
+Pottegard
 REporting
 RPostgres
 RStudio
@@ -35,7 +35,6 @@ SMDs
 SNOMED
 SV
 Saf
-Schneeweiss
 Smeeth
 Synthea
 al
@@ -63,7 +62,6 @@ rmarkdown
 roadmap
 schema's
 schemas
-tEmplate
 tavakohr
 unmapped
 www
