@@ -8,8 +8,8 @@ HTML and JSON report.
 
 On win-builder (R-release 4.6.1 and R-devel): 0 errors | 0 warnings | 1 note.
 
-The note is the standard "New submission" note, together with two sub-items that
-are false positives:
+The note is the standard "New submission" note, together with one sub-item that
+is a false positive:
 
 * Possibly misspelled words in DESCRIPTION: "CDM", "OMOP", "RWE", "comparator",
   and "Langan". These are correct. "OMOP" and "CDM" are the OMOP Common Data
@@ -24,11 +24,13 @@ win-builder machines.
 
 ## Examples
 
-All examples that need a live OMOP CDM database connection are wrapped in
-\dontrun{}, because they require credentials and a populated database that
-cannot be provided during a check. The package is fully exercised without a live
-database by the test suite, which runs every module against an in-memory DuckDB
-mock of a small synthetic CDM.
+Examples that need a live OMOP CDM database connection are wrapped in \dontrun{},
+because they require credentials and a populated database that cannot be provided
+during a check. The main function, validate_cohort(), also has a runnable example
+that executes during the check: it builds a small synthetic CDM in an in-memory
+DuckDB database with the exported example_cdm() helper, so the example needs no
+external database. The package is also fully exercised by the test suite, which
+runs every module against the same kind of DuckDB mock.
 
 ## Test environments
 
