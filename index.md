@@ -46,9 +46,9 @@ to which framework and why.
 | Module | Function | Framework | Document | What Section Covers |
 |----|----|----|----|----|
 | 1 | [`run_concepts()`](reference/run_concepts.md) | FDA RWE Guidance: Relevance | FDA (2023) *Real-World Data and Real-World Evidence* | Are the cohort-defining concepts present, well-mapped, and ancestry-expanded in the vocabulary? This is the “fit-for-purpose data” question. |
-| 2 | [`run_attrition()`](reference/run_attrition.md) | HARPER Protocol (S5) + RECORD-PE (Item 6) | Harrigan et al. 2022; Benchimol et al. 2015 | Can you justify who was included and excluded? Covers cohort size, index-date distribution, prior observation coverage, and demographics at index. |
+| 2 | [`run_attrition()`](reference/run_attrition.md) | HARPER Protocol (S5) + RECORD-PE (Item 6) | Wang et al. 2022; Langan et al. 2018 | Can you justify who was included and excluded? Covers cohort size, index-date distribution, prior observation coverage, and demographics at index. |
 | 3 | [`run_density()`](reference/run_density.md) | FDA RWE Guidance: Reliability | FDA (2023) *Real-World Data and Real-World Evidence* | Is the recorded data complete over time? Covers records per patient per month across four clinical domains and follow-up censoring breakdown. |
-| 4 | [`run_covariates()`](reference/run_covariates.md) | HARPER Protocol (S4) | Harrigan et al. 2022 | Are the exposure groups comparable? Covers standardized mean differences (love plot), per-arm concept prevalence, and a power calculation. |
+| 4 | [`run_covariates()`](reference/run_covariates.md) | HARPER Protocol (S4) | Wang et al. 2022 | Are the exposure groups comparable? Covers standardized mean differences (love plot), per-arm concept prevalence, and a power calculation. |
 
 ### Full Citations
 
@@ -65,11 +65,12 @@ Reliability asks whether the data are complete, consistently recorded,
 and free from systematic dropout or ascertainment bias. Modules 1 and 3
 in `rwevalidate` answer these two axes directly.
 
-**HARPER Protocol (2022)** Harrigan P, Schneeweiss S, Wang SV, et
-al. *Harmonized Protocol Template to Enhance Reproducibility (HARmonized
-Protocol tEmplate to Enhance Reproducibility) for Real-World Evidence
-Studies.* Pharmacoepidemiol Drug Saf. 2022;31(11):1471-1482. Available
-at: [doi.org/10.1002/pds.5588](https://doi.org/10.1002/pds.5588)
+**HARPER Protocol (2022)** Wang SV, Pottegard A, Crown W, et
+al. *HARmonized Protocol Template to Enhance Reproducibility of
+hypothesis evaluating real-world evidence studies on treatment effects:
+A good practices report of a joint ISPE/ISPOR task force.*
+Pharmacoepidemiol Drug Saf. 2023;32(1):44-55. Available at:
+[doi.org/10.1002/pds.5507](https://doi.org/10.1002/pds.5507)
 
 HARPER is a structured protocol template designed to make
 pharmacoepidemiology RWE studies reproducible and independently
@@ -82,9 +83,11 @@ these two sections directly.
 **RECORD-PE (2015, extended 2018)** Benchimol EI, Smeeth L, Guttmann A,
 et al. *The REporting of studies Conducted using Observational
 Routinely-collected health Data (RECORD) Statement.* PLoS Med.
-2015;12(10):e1001885. Garbe E, Andersen M, Bhimraj A, et al. *RECORD-PE:
-Reporting of pharmacoepidemiology studies using routinely collected
-health data.* BMJ. 2018;363:k4538.
+2015;12(10):e1001885. Langan SM, Schmidt SA, Wing K, et al. *The
+reporting of studies conducted using observational routinely collected
+health data statement for pharmacoepidemiology (RECORD-PE).* BMJ.
+2018;363:k3532. Available at:
+[doi.org/10.1136/bmj.k3532](https://doi.org/10.1136/bmj.k3532)
 
 Item 6 of the RECORD-PE checklist requires a patient flowchart showing
 how many individuals were identified at each stage of cohort

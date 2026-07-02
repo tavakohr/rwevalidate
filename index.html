@@ -103,7 +103,7 @@
 <td>2</td>
 <td><code><a href="reference/run_attrition.html">run_attrition()</a></code></td>
 <td>HARPER Protocol (S5) + RECORD-PE (Item 6)</td>
-<td>Harrigan et al. 2022; Benchimol et al. 2015</td>
+<td>Wang et al. 2022; Langan et al. 2018</td>
 <td>Can you justify who was included and excluded? Covers cohort size, index-date distribution, prior observation coverage, and demographics at index.</td>
 </tr>
 <tr>
@@ -118,7 +118,7 @@
 <td>4</td>
 <td><code><a href="reference/run_covariates.html">run_covariates()</a></code></td>
 <td>HARPER Protocol (S4)</td>
-<td>Harrigan et al. 2022</td>
+<td>Wang et al. 2022</td>
 <td>Are the exposure groups comparable? Covers standardized mean differences (love plot), per-arm concept prevalence, and a power calculation.</td>
 </tr>
 </tbody>
@@ -128,9 +128,9 @@
 </h3>
 <p><strong>FDA RWE Guidance (2023)</strong> U.S. Food and Drug Administration. <em>Considerations for the Use of Real-World Data and Real-World Evidence to Support Regulatory Decision-Making for Drug and Biological Products.</em> Guidance for Industry. Silver Spring, MD: FDA; 2023. Available at: <a href="https://www.fda.gov/media/171667/download" class="external-link">www.fda.gov/media/171667/download</a></p>
 <p>The FDA guidance organizes its evaluation of RWE studies around two axes. Relevance asks whether the data source captures the population, exposure, outcome, and covariates that the study intends to measure. Reliability asks whether the data are complete, consistently recorded, and free from systematic dropout or ascertainment bias. Modules 1 and 3 in <code>rwevalidate</code> answer these two axes directly.</p>
-<p><strong>HARPER Protocol (2022)</strong> Harrigan P, Schneeweiss S, Wang SV, et al. <em>Harmonized Protocol Template to Enhance Reproducibility (HARmonized Protocol tEmplate to Enhance Reproducibility) for Real-World Evidence Studies.</em> Pharmacoepidemiol Drug Saf. 2022;31(11):1471-1482. Available at: <a href="https://doi.org/10.1002/pds.5588" class="external-link">doi.org/10.1002/pds.5588</a></p>
+<p><strong>HARPER Protocol (2022)</strong> Wang SV, Pottegard A, Crown W, et al. <em>HARmonized Protocol Template to Enhance Reproducibility of hypothesis evaluating real-world evidence studies on treatment effects: A good practices report of a joint ISPE/ISPOR task force.</em> Pharmacoepidemiol Drug Saf. 2023;32(1):44-55. Available at: <a href="https://doi.org/10.1002/pds.5507" class="external-link">doi.org/10.1002/pds.5507</a></p>
 <p>HARPER is a structured protocol template designed to make pharmacoepidemiology RWE studies reproducible and independently verifiable before data analysis begins. Section 4 specifies how covariates should be defined and balanced across arms. Section 5 specifies how cohort definition criteria and their sequential attrition should be documented. Modules 2 and 4 produce output that can populate these two sections directly.</p>
-<p><strong>RECORD-PE (2015, extended 2018)</strong> Benchimol EI, Smeeth L, Guttmann A, et al. <em>The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) Statement.</em> PLoS Med. 2015;12(10):e1001885. Garbe E, Andersen M, Bhimraj A, et al. <em>RECORD-PE: Reporting of pharmacoepidemiology studies using routinely collected health data.</em> BMJ. 2018;363:k4538.</p>
+<p><strong>RECORD-PE (2015, extended 2018)</strong> Benchimol EI, Smeeth L, Guttmann A, et al. <em>The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) Statement.</em> PLoS Med. 2015;12(10):e1001885. Langan SM, Schmidt SA, Wing K, et al. <em>The reporting of studies conducted using observational routinely collected health data statement for pharmacoepidemiology (RECORD-PE).</em> BMJ. 2018;363:k3532. Available at: <a href="https://doi.org/10.1136/bmj.k3532" class="external-link">doi.org/10.1136/bmj.k3532</a></p>
 <p>Item 6 of the RECORD-PE checklist requires a patient flowchart showing how many individuals were identified at each stage of cohort construction and why they were excluded. <code><a href="reference/run_attrition.html">run_attrition()</a></code> reports the cohort-level counts this item asks for (size, index dates, prior observation, demographics). It does not yet rebuild the step-by-step flowchart itself, because the instantiated cohort table does not carry the criteria that produced it. Per-criterion attrition is planned for a later version.</p>
 <hr>
 </div>
