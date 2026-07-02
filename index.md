@@ -483,22 +483,13 @@ text otherwise so the report structure stays consistent across runs.
 
 ------------------------------------------------------------------------
 
-## Development and Testing
+## Contributing
 
-The test suite uses a DuckDB-backed synthetic OMOP mock. You do not need
-a live PostgreSQL connection to run `R CMD check`.
-
-``` r
-
-devtools::test()   # runs testthat suite against DuckDB mock
-devtools::check()  # full package check
-```
-
-The CI pipeline on GitHub Actions runs `R CMD check` on Ubuntu, builds
-coverage reports via Codecov, and deploys the pkgdown documentation site
-to
-[tavakohr.github.io/rwevalidate](https://tavakohr.github.io/rwevalidate/)
-on every push to `main`.
+Bug reports, feature ideas, and pull requests are welcome. Development
+and testing run offline against a synthetic DuckDB CDM, so you do not
+need a live database. See
+[CONTRIBUTING.md](https://github.com/tavakohr/rwevalidate/blob/main/CONTRIBUTING.md)
+for setup, testing, and the pull-request process.
 
 ------------------------------------------------------------------------
 

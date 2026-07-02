@@ -512,13 +512,9 @@
 <hr>
 </div>
 <div class="section level2">
-<h2 id="development-and-testing">Development and Testing<a class="anchor" aria-label="anchor" href="#development-and-testing"></a>
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>The test suite uses a DuckDB-backed synthetic OMOP mock. You do not need a live PostgreSQL connection to run <code>R CMD check</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span>   <span class="co"># runs testthat suite against DuckDB mock</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">check</span><span class="op">(</span><span class="op">)</span>  <span class="co"># full package check</span></span></code></pre></div>
-<p>The CI pipeline on GitHub Actions runs <code>R CMD check</code> on Ubuntu, builds coverage reports via Codecov, and deploys the pkgdown documentation site to <a href="https://tavakohr.github.io/rwevalidate/" class="external-link">tavakohr.github.io/rwevalidate</a> on every push to <code>main</code>.</p>
+<p>Bug reports, feature ideas, and pull requests are welcome. Development and testing run offline against a synthetic DuckDB CDM, so you do not need a live database. See <a href="https://github.com/tavakohr/rwevalidate/blob/main/CONTRIBUTING.md" class="external-link">CONTRIBUTING.md</a> for setup, testing, and the pull-request process.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -543,6 +539,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
