@@ -79,7 +79,10 @@ A named list:
 - obs_coverage:
 
   data.frame: `cohort_n`, `n_sufficient`, `pct_sufficient`,
-  `min_prior_days`
+  `min_prior_days`. `cohort_n` counts every cohort subject. A subject
+  whose index date falls outside any observation period counts as
+  insufficient prior observation rather than being dropped, so
+  `cohort_n` matches `cohort_size`.
 
 - demographics:
 
@@ -88,3 +91,12 @@ A named list:
 - flags:
 
   character vector of `WARN:`/`FAIL:` messages (empty if all pass)
+
+## Details
+
+This profiles the cohort as it was handed in. It reports the
+cohort-level counts that item 6 asks for, but it does not yet rebuild a
+step-by-step attrition flowchart (how many subjects each inclusion or
+exclusion criterion removed), because the cohort table does not carry
+the criteria that built it. Per-criterion attrition is planned for a
+later version.

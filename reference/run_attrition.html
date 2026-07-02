@@ -118,7 +118,10 @@ criteria lists are not yet a supported input. Default 0.5.</p></dd>
 <dd><p>data.frame of <code>index_year</code>, <code>n</code></p></dd>
 
 <dt>obs_coverage</dt>
-<dd><p>data.frame: <code>cohort_n</code>, <code>n_sufficient</code>, <code>pct_sufficient</code>, <code>min_prior_days</code></p></dd>
+<dd><p>data.frame: <code>cohort_n</code>, <code>n_sufficient</code>, <code>pct_sufficient</code>, <code>min_prior_days</code>.
+<code>cohort_n</code> counts every cohort subject. A subject whose index date falls
+outside any observation period counts as insufficient prior observation
+rather than being dropped, so <code>cohort_n</code> matches <code>cohort_size</code>.</p></dd>
 
 <dt>demographics</dt>
 <dd><p>data.frame: <code>sex</code>, <code>mean_age</code>, <code>min_age</code>, <code>max_age</code>, <code>n</code></p></dd>
@@ -128,6 +131,14 @@ criteria lists are not yet a supported input. Default 0.5.</p></dd>
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This profiles the cohort as it was handed in. It reports the cohort-level
+counts that item 6 asks for, but it does not yet rebuild a step-by-step
+attrition flowchart (how many subjects each inclusion or exclusion criterion
+removed), because the cohort table does not carry the criteria that built it.
+Per-criterion attrition is planned for a later version.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -53,8 +53,8 @@ the question?). This is the first module to read the vocabulary schema.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_concepts</span><span class="op">(</span></span>
 <span>  <span class="va">con</span>,</span>
 <span>  <span class="va">cdm_schema</span>,</span>
-<span>  <span class="va">cohort_table</span>,</span>
-<span>  <span class="va">cohort_id</span>,</span>
+<span>  cohort_table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cohort_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">concept_ids</span>,</span>
 <span>  domain <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>  vocab_schema <span class="op">=</span> <span class="st">"vocab"</span>,</span>
@@ -77,12 +77,13 @@ the question?). This is the first module to read the vocabulary schema.</p>
 
 
 <dt id="arg-cohort-table">cohort_table<a class="anchor" aria-label="anchor" href="#arg-cohort-table"></a></dt>
-<dd><p>Cohort table, schema-qualified (currently unused; reserved
-for cohort-restricted prevalence in a later version).</p></dd>
+<dd><p>Cohort table, schema-qualified. Optional and currently
+unused; reserved for cohort-restricted prevalence in a later version.</p></dd>
 
 
 <dt id="arg-cohort-id">cohort_id<a class="anchor" aria-label="anchor" href="#arg-cohort-id"></a></dt>
-<dd><p>Integer cohort definition id (reserved, see <code>cohort_table</code>).</p></dd>
+<dd><p>Integer cohort definition id. Optional and reserved, see
+<code>cohort_table</code>.</p></dd>
 
 
 <dt id="arg-concept-ids">concept_ids<a class="anchor" aria-label="anchor" href="#arg-concept-ids"></a></dt>

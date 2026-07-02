@@ -131,7 +131,7 @@
 <p><strong>HARPER Protocol (2022)</strong> Harrigan P, Schneeweiss S, Wang SV, et al. <em>Harmonized Protocol Template to Enhance Reproducibility (HARmonized Protocol tEmplate to Enhance Reproducibility) for Real-World Evidence Studies.</em> Pharmacoepidemiol Drug Saf. 2022;31(11):1471-1482. Available at: <a href="https://doi.org/10.1002/pds.5588" class="external-link">doi.org/10.1002/pds.5588</a></p>
 <p>HARPER is a structured protocol template designed to make pharmacoepidemiology RWE studies reproducible and independently verifiable before data analysis begins. Section 4 specifies how covariates should be defined and balanced across arms. Section 5 specifies how cohort definition criteria and their sequential attrition should be documented. Modules 2 and 4 produce output that can populate these two sections directly.</p>
 <p><strong>RECORD-PE (2015, extended 2018)</strong> Benchimol EI, Smeeth L, Guttmann A, et al. <em>The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) Statement.</em> PLoS Med. 2015;12(10):e1001885. Garbe E, Andersen M, Bhimraj A, et al. <em>RECORD-PE: Reporting of pharmacoepidemiology studies using routinely collected health data.</em> BMJ. 2018;363:k4538.</p>
-<p>Item 6 of the RECORD-PE checklist requires a patient flowchart showing how many individuals were identified at each stage of cohort construction and why they were excluded. The attrition table and flag output from <code><a href="reference/run_attrition.html">run_attrition()</a></code> are designed to populate this item.</p>
+<p>Item 6 of the RECORD-PE checklist requires a patient flowchart showing how many individuals were identified at each stage of cohort construction and why they were excluded. <code><a href="reference/run_attrition.html">run_attrition()</a></code> reports the cohort-level counts this item asks for (size, index dates, prior observation, demographics). It does not yet rebuild the step-by-step flowchart itself, because the instantiated cohort table does not carry the criteria that produced it. Per-criterion attrition is planned for a later version.</p>
 <hr>
 </div>
 </div>
@@ -425,13 +425,15 @@
 </h2>
 <ul>
 <li>
-<strong>CDM version:</strong> OMOP CDM v5.3.1 (the v5.4 episode tables are not used).</li>
+<strong>CDM version:</strong> OMOP CDM v5.3.1 (the v5.4 episode tables are not used). <code><a href="reference/validate_cohort.html">validate_cohort()</a></code> warns if the connected CDM reports a version outside 5.3.x.</li>
 <li>
 <strong>Databases:</strong> PostgreSQL (primary). DuckDB is supported for testing via the <code>testthat</code> mock.</li>
 <li>
+<strong>SQL dialect:</strong> Queries are written in PostgreSQL and DuckDB SQL and run directly through <code>DBI</code>. They are not yet translated with <code>SqlRender</code>, so other OHDSI backends (SQL Server, Redshift, Oracle, BigQuery) are not supported in this version. Multi-dialect support via <code>SqlRender</code> is on the roadmap for OHDSI network use.</li>
+<li>
 <strong>Cohort input:</strong> Instantiated cohort tables only. The table must have <code>subject_id</code>, <code>cohort_definition_id</code>, <code>cohort_start_date</code>, and <code>cohort_end_date</code> columns. ATLAS JSON parsing is not supported.</li>
 <li>
-<strong>No OHDSI tool chain required:</strong> The package imports only standard CRAN packages (DBI, RPostgres, dplyr, ggplot2, gt, jsonlite, rmarkdown, glue, cli, rlang) and does not require CohortDiagnostics, DataQualityDashboard, Achilles, or DatabaseConnector.</li>
+<strong>No OHDSI tool chain required:</strong> The package imports only lightweight CRAN packages (DBI, RPostgres, jsonlite, rmarkdown, glue, cli, utils; ggplot2 is a soft dependency used only for report plots) and does not require CohortDiagnostics, DataQualityDashboard, Achilles, or DatabaseConnector.</li>
 </ul>
 <hr>
 </div>
@@ -462,9 +464,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 

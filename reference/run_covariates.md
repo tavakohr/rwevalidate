@@ -20,7 +20,8 @@ run_covariates(
   smd_warn_threshold = 0.1,
   power_baseline_rate = 0.15,
   power_effect_rate = 0.3,
-  power_sig_level = 0.05
+  power_sig_level = 0.05,
+  power_warn_threshold = 0.8
 )
 ```
 
@@ -73,6 +74,10 @@ run_covariates(
 - power_sig_level:
 
   Significance level for the power calculation. Default 0.05.
+
+- power_warn_threshold:
+
+  Power below this value flags a `WARN`. Default 0.80.
 
 ## Value
 

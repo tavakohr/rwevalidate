@@ -11,8 +11,8 @@ vocabulary schema.
 run_concepts(
   con,
   cdm_schema,
-  cohort_table,
-  cohort_id,
+  cohort_table = NULL,
+  cohort_id = NULL,
   concept_ids,
   domain = "condition",
   vocab_schema = "vocab",
@@ -34,12 +34,13 @@ run_concepts(
 
 - cohort_table:
 
-  Cohort table, schema-qualified (currently unused; reserved for
-  cohort-restricted prevalence in a later version).
+  Cohort table, schema-qualified. Optional and currently unused;
+  reserved for cohort-restricted prevalence in a later version.
 
 - cohort_id:
 
-  Integer cohort definition id (reserved, see `cohort_table`).
+  Integer cohort definition id. Optional and reserved, see
+  `cohort_table`.
 
 - concept_ids:
 

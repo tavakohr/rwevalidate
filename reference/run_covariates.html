@@ -65,7 +65,8 @@ when a <code>comparator_id</code> is supplied.</p>
 <span>  smd_warn_threshold <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  power_baseline_rate <span class="op">=</span> <span class="fl">0.15</span>,</span>
 <span>  power_effect_rate <span class="op">=</span> <span class="fl">0.3</span>,</span>
-<span>  power_sig_level <span class="op">=</span> <span class="fl">0.05</span></span>
+<span>  power_sig_level <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  power_warn_threshold <span class="op">=</span> <span class="fl">0.8</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -119,6 +120,10 @@ event rates for the two-proportion power calculation. Defaults 0.15, 0.30.</p></
 
 <dt id="arg-power-sig-level">power_sig_level<a class="anchor" aria-label="anchor" href="#arg-power-sig-level"></a></dt>
 <dd><p>Significance level for the power calculation. Default 0.05.</p></dd>
+
+
+<dt id="arg-power-warn-threshold">power_warn_threshold<a class="anchor" aria-label="anchor" href="#arg-power-warn-threshold"></a></dt>
+<dd><p>Power below this value flags a <code>WARN</code>. Default 0.80.</p></dd>
 
 </dl></div>
     <div class="section level2">
