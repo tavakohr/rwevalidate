@@ -20,6 +20,36 @@ definition (SQL or ATLAS) stays upstream.
 The code below is not executed when the vignette is built (it needs a live
 database); it is the exact sequence you would run against your own CDM.
 
+## Try it without a database
+
+Before pointing the package at a real CDM, you can see it run end to end on a
+small synthetic one. `example_cdm()` builds a tiny OMOP CDM (10 patients, one
+heart-failure cohort) in an in-memory DuckDB database and returns a live
+connection. This is the only chunk in this article that actually runs, and it
+needs the `duckdb` package.
+
+```{r, eval = requireNamespace("duckdb", quietly = TRUE)}
+library(rwevalidate)
+
+con <- example_cdm()
+
+out <- validate_cohort(
+  cdm_schema   = "main",
+  cohort_table = "cohort",
+  cohort_id    = 1,
+  con          = con,
+  vocab_schema = "main",
+  output_dir   = tempfile("rwe_demo_"),
+  render_html  = FALSE
+)
+
+out$report$check_summary
+cdm_disconnect(con)
+```
+
+The fixture is entirely synthetic and contains no real patient data. Everything
+below shows how to run the same call against your own OMOP CDM.
+
 ## 1. Connect
 
 `cdm_connect()` opens a PostgreSQL connection and verifies the required clinical

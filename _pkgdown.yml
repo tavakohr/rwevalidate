@@ -19,6 +19,10 @@ reference:
   contents:
   - cdm_connect
   - cdm_disconnect
+- title: Demo data
+  desc: A small synthetic OMOP CDM in DuckDB for examples and trying the package offline.
+  contents:
+  - example_cdm
 - title: Validation modules
   desc: The four checks, callable individually.
   contents:
