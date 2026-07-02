@@ -71,7 +71,7 @@ if (!is.null(check_sum) && nrow(check_sum) > 0) {
 
 # 1. Data Source Summary
 
-*FDA Relevance — is the data fit for the question?*
+*FDA Relevance: is the data fit for the question?*
 
 ```{r data-source}
 if (!is.null(data_source)) {
@@ -124,7 +124,7 @@ if (is.null(concepts)) {
 
 # 3. Cohort Attrition
 
-*HARPER §5 / RECORD-PE Item 6 — who is in the cohort and how it was built.*
+*HARPER Section 5 and RECORD-PE Item 6: who is in the cohort and how it was built.*
 
 ```{r attrition, results='asis'}
 if (is.null(attrition)) {
@@ -157,7 +157,7 @@ if (!is.null(attrition) && nrow(attrition$index_date_summary) > 0) {
 
 # 4. Temporal Data Density
 
-*FDA Reliability — data accrual around the index date.*
+*FDA Reliability: data accrual around the index date.*
 
 ```{r density-heatmap, eval=has_ggplot}
 if (!is.null(density) && nrow(density$density_by_domain) > 0) {
@@ -175,7 +175,7 @@ if (!is.null(density) && nrow(density$density_by_domain) > 0) {
 
 ```{r followup, results='asis'}
 if (!is.null(density) && nrow(density$followup_summary) > 0) {
-  cat("**Follow-up completeness — censoring breakdown**\n\n")
+  cat("**Follow-up completeness: censoring breakdown**\n\n")
   print(kbl(density$followup_summary))
   cat("\n")
   if (length(density$flags)) {
