@@ -117,7 +117,36 @@ is left open.
 ## Examples
 
 ``` r
+# Runnable demo on a small in-memory DuckDB CDM (no database needed).
+# render_html = FALSE writes only the JSON sidecar, so Pandoc is not required.
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  out <- validate_cohort(
+    cdm_schema   = "main",
+    cohort_table = "cohort",
+    cohort_id    = 1,
+    con          = con,
+    vocab_schema = "main",
+    output_dir   = tempfile("rwe_demo_"),
+    render_html  = FALSE
+  )
+  print(out$report$check_summary)
+  cdm_disconnect(con)
+}
+#> ℹ Running attrition audit (Module 2)...
+#> ℹ Running temporal data density (Module 3)...
+#> Module 1 (concept coverage) skipped; supply `concept_ids` to enable.
+#> Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.
+#> ✔ Validation complete: 0 fail, 0 warn across 2 checks.
+#>                 section status                         maps_to
+#> 1      Cohort Attrition   pass HARPER Sec.5 / RECORD-PE Item 6
+#> 2 Temporal Data Density   pass  FDA Reliability - data accrual
+#>               detail
+#> 1 All checks passed.
+#> 2 All checks passed.
+
 if (FALSE) { # \dontrun{
+# Against a live PostgreSQL OMOP CDM:
 validate_cohort(
   cdm_schema   = "mimic_cdm",
   cohort_table = "results.rwevalidate_test_cohort",

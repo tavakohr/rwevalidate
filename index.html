@@ -220,12 +220,86 @@
 <hr>
 </div>
 <div class="section level2">
+<h2 id="try-it-without-a-database">Try It Without a Database<a class="anchor" aria-label="anchor" href="#try-it-without-a-database"></a>
+</h2>
+<p>You do not need a live database to see the package work. <code><a href="reference/example_cdm.html">example_cdm()</a></code> builds a tiny synthetic OMOP CDM in an in-memory DuckDB database and returns a live connection you can pass straight to <code><a href="reference/validate_cohort.html">validate_cohort()</a></code>. This needs the <code>duckdb</code> package installed (<code>install.packages("duckdb")</code>).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tavakohr/rwevalidate" class="external-link">rwevalidate</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/example_cdm.html">example_cdm</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># tiny synthetic OMOP CDM in in-memory DuckDB</span></span>
+<span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
+<span>  cdm_schema   <span class="op">=</span> <span class="st">"main"</span>,       <span class="co"># the demo CDM uses the default DuckDB schema</span></span>
+<span>  cohort_table <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  cohort_id    <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  con          <span class="op">=</span> <span class="va">con</span>,</span>
+<span>  vocab_schema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  output_dir   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rwe_demo_"</span><span class="op">)</span>,</span>
+<span>  render_html  <span class="op">=</span> <span class="cn">FALSE</span>         <span class="co"># write the JSON sidecar only, no Pandoc needed</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">out</span><span class="op">$</span><span class="va">report</span><span class="op">$</span><span class="va">check_summary</span>       <span class="co"># traffic-light table: attrition + density both pass</span></span>
+<span><span class="fu"><a href="reference/cdm_disconnect.html">cdm_disconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="what-is-in-the-demo-cdm">What is in the demo CDM<a class="anchor" aria-label="anchor" href="#what-is-in-the-demo-cdm"></a>
+</h3>
+<p>The fixture is entirely synthetic. It contains no MIMIC-IV or other real patient data, so it is safe to ship and runs offline. It holds <strong>10 fake patients in one heart-failure cohort</strong>, with every table the attrition and density modules query:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Table</th>
+<th>Contents</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>person</code></td>
+<td>10 patients, alternating sex, birth years 1948-1975</td>
+</tr>
+<tr>
+<td><code>observation_period</code></td>
+<td>~3 years of coverage each, staggered start dates</td>
+</tr>
+<tr>
+<td><code>condition_occurrence</code></td>
+<td>one heart-failure record each (SNOMED 316139)</td>
+</tr>
+<tr>
+<td>
+<code>drug_exposure</code>, <code>measurement</code>, <code>visit_occurrence</code>
+</td>
+<td>one record each near the index date</td>
+</tr>
+<tr>
+<td><code>death</code></td>
+<td>2 of the 10 patients die; the rest are censored at cohort exit</td>
+</tr>
+<tr>
+<td>
+<code>concept</code>, <code>concept_ancestor</code>
+</td>
+<td>minimal vocabulary (sex labels, heart failure, a few others)</td>
+</tr>
+<tr>
+<td><code>cohort</code></td>
+<td>the 10 patients as <code>cohort_definition_id = 1</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>It deliberately omits a comparator arm and a rich vocabulary, so it exercises the default attrition and density checks but not Module 1 (concept coverage) or Module 4 (covariate feasibility). For those, and for any real analysis, point the package at an actual OMOP CDM as shown below.</p>
+<hr>
+</div>
+</div>
+<div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <div class="section level3">
 <h3 id="minimal-call-attrition--density-only">Minimal call (attrition + density only)<a class="anchor" aria-label="anchor" href="#minimal-call-attrition--density-only"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tavakohr/rwevalidate" class="external-link">rwevalidate</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
@@ -252,7 +326,7 @@
 <div class="section level3">
 <h3 id="full-call-all-four-modules">Full call (all four modules)<a class="anchor" aria-label="anchor" href="#full-call-all-four-modules"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
 <span>  cdm_schema     <span class="op">=</span> <span class="st">"mimic_cdm"</span>,</span>
 <span>  cohort_table   <span class="op">=</span> <span class="st">"results.rwevalidate_test_cohort"</span>,</span>
@@ -271,7 +345,7 @@
 <div class="section level3">
 <h3 id="using-an-existing-connection">Using an existing connection<a class="anchor" aria-label="anchor" href="#using-an-existing-connection"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cdm_connect.html">cdm_connect</a></span><span class="op">(</span></span>
 <span>  host <span class="op">=</span> <span class="st">"localhost"</span>, port <span class="op">=</span> <span class="fl">5432</span>,</span>
 <span>  dbname <span class="op">=</span> <span class="st">"FHIR"</span>, user <span class="op">=</span> <span class="st">"your_user"</span>, password <span class="op">=</span> <span class="st">"your_password"</span>,</span>
@@ -292,7 +366,7 @@
 <h3 id="calling-modules-directly">Calling modules directly<a class="anchor" aria-label="anchor" href="#calling-modules-directly"></a>
 </h3>
 <p>Each module can be called on its own if you only need part of the validation.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cdm_connect.html">cdm_connect</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Module 2 only: attrition audit</span></span>
@@ -319,7 +393,7 @@
 </h3>
 <p>Maps to <strong>FDA RWE Guidance: Relevance</strong>.</p>
 <p>Checks whether the concepts used to define the cohort are actually present in the CDM, how well they are mapped to standard vocabulary, and what proportion of the cohort has a recorded event under each concept and its descendants. It expands seed concept IDs through the <code>concept_ancestor</code> table and computes prevalence and mapping rates per domain.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/run_concepts.html">run_concepts</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>, <span class="va">cdm_schema</span>, <span class="va">cohort_table</span>, <span class="va">cohort_id</span>,</span>
 <span>  concept_ids    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">316139</span><span class="op">)</span>,    <span class="co"># seed SNOMED concept ID for heart failure</span></span>
@@ -334,7 +408,7 @@
 </h3>
 <p>Maps to <strong>HARPER Protocol Section 5</strong> and <strong>RECORD-PE Item 6</strong>.</p>
 <p>Profiles the cohort population with four queries: (2a) total distinct subjects, (2b) index date distribution by year, (2c) prior observation coverage relative to the required lookback window, and (2d) age and sex at index date. Flags are raised when prior observation coverage falls below the warn or fail threshold.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/run_attrition.html">run_attrition</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>, <span class="va">cdm_schema</span>, <span class="va">cohort_table</span>, <span class="va">cohort_id</span>,</span>
 <span>  obs_window    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">365</span>, <span class="fl">0</span><span class="op">)</span>,</span>
@@ -348,7 +422,7 @@
 </h3>
 <p>Maps to <strong>FDA RWE Guidance: Reliability</strong>.</p>
 <p>Computes records per patient per month relative to index date across four clinical domains: conditions, drugs, measurements, and visits. Also produces a follow-up completeness table showing how each subject’s observation period ends (death, cohort exit, or end of available data). Sparse density in specific months can indicate data gaps or coding practice changes.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/run_density.html">run_density</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>, <span class="va">cdm_schema</span>, <span class="va">cohort_table</span>, <span class="va">cohort_id</span>,</span>
 <span>  obs_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">365</span>, <span class="fl">365</span><span class="op">)</span></span>
@@ -359,7 +433,7 @@
 </h3>
 <p>Maps to <strong>HARPER Protocol Section 4</strong>.</p>
 <p>Requires a comparator cohort. Computes standardized mean differences (SMDs) for binary and continuous covariates across the target and comparator arms, ranks the top concepts by prevalence, and estimates study power. SMD values above 0.1 are conventionally considered imbalanced and are flagged.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/run_covariates.html">run_covariates</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>, <span class="va">cdm_schema</span>, <span class="va">cohort_table</span>, <span class="va">cohort_id</span>,</span>
 <span>  comparator_id <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -441,7 +515,7 @@
 <h2 id="development-and-testing">Development and Testing<a class="anchor" aria-label="anchor" href="#development-and-testing"></a>
 </h2>
 <p>The test suite uses a DuckDB-backed synthetic OMOP mock. You do not need a live PostgreSQL connection to run <code>R CMD check</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span>   <span class="co"># runs testthat suite against DuckDB mock</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">check</span><span class="op">(</span><span class="op">)</span>  <span class="co"># full package check</span></span></code></pre></div>
 <p>The CI pipeline on GitHub Actions runs <code>R CMD check</code> on Ubuntu, builds coverage reports via Codecov, and deploys the pkgdown documentation site to <a href="https://tavakohr.github.io/rwevalidate/" class="external-link">tavakohr.github.io/rwevalidate</a> on every push to <code>main</code>.</p>
@@ -450,7 +524,7 @@
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p>MIT. See <a href="LICENSE.html">LICENSE</a>.</p>
+<p>MIT. See <a href="https://github.com/tavakohr/rwevalidate/blob/main/LICENSE.md" class="external-link">LICENSE</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

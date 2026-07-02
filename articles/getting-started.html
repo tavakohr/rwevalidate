@@ -77,12 +77,53 @@ ATLAS) stays upstream.</p>
 live database); it is the exact sequence you would run against your own
 CDM.</p>
 <div class="section level2">
+<h2 id="try-it-without-a-database">Try it without a database<a class="anchor" aria-label="anchor" href="#try-it-without-a-database"></a>
+</h2>
+<p>Before pointing the package at a real CDM, you can see it run end to
+end on a small synthetic one. <code><a href="../reference/example_cdm.html">example_cdm()</a></code> builds a tiny
+OMOP CDM (10 patients, one heart-failure cohort) in an in-memory DuckDB
+database and returns a live connection. This is the only chunk in this
+article that actually runs, and it needs the <code>duckdb</code>
+package.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tavakohr/rwevalidate" class="external-link">rwevalidate</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example_cdm.html">example_cdm</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
+<span>  cdm_schema   <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  cohort_table <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  cohort_id    <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  con          <span class="op">=</span> <span class="va">con</span>,</span>
+<span>  vocab_schema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  output_dir   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rwe_demo_"</span><span class="op">)</span>,</span>
+<span>  render_html  <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Running attrition audit (Module 2)...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Running temporal data density (Module 3)...</span></span>
+<span><span class="co">#&gt; Module 1 (concept coverage) skipped; supply `concept_ids` to enable.</span></span>
+<span><span class="co">#&gt; Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Validation complete: 0 fail, 0 warn across 2 checks.</span></span>
+<span></span>
+<span><span class="va">out</span><span class="op">$</span><span class="va">report</span><span class="op">$</span><span class="va">check_summary</span></span>
+<span><span class="co">#&gt;                 section status                         maps_to</span></span>
+<span><span class="co">#&gt; 1      Cohort Attrition   pass HARPER Sec.5 / RECORD-PE Item 6</span></span>
+<span><span class="co">#&gt; 2 Temporal Data Density   pass  FDA Reliability - data accrual</span></span>
+<span><span class="co">#&gt;               detail</span></span>
+<span><span class="co">#&gt; 1 All checks passed.</span></span>
+<span><span class="co">#&gt; 2 All checks passed.</span></span>
+<span><span class="fu"><a href="../reference/cdm_disconnect.html">cdm_disconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></code></pre></div>
+<p>The fixture is entirely synthetic and contains no real patient data.
+Everything below shows how to run the same call against your own OMOP
+CDM.</p>
+</div>
+<div class="section level2">
 <h2 id="connect">1. Connect<a class="anchor" aria-label="anchor" href="#connect"></a>
 </h2>
 <p><code><a href="../reference/cdm_connect.html">cdm_connect()</a></code> opens a PostgreSQL connection and verifies
 the required clinical tables exist in <code>cdm_schema</code> before
 returning.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tavakohr/rwevalidate" class="external-link">rwevalidate</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cdm_connect.html">cdm_connect</a></span><span class="op">(</span></span>
@@ -106,7 +147,7 @@ via <code>vocab_schema</code> (default <code>"vocab"</code>).</p>
 <code>cohort_start_date</code>, <code>cohort_end_date</code>. For
 example, a heart-failure cohort using SNOMED concept 316139 and its
 descendants:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"</span></span>
 <span><span class="st">  CREATE TABLE results.my_cohort AS</span></span>
 <span><span class="st">  SELECT person_id AS subject_id, 1 AS cohort_definition_id,</span></span>
@@ -124,7 +165,7 @@ descendants:</p>
 <p><code><a href="../reference/validate_cohort.html">validate_cohort()</a></code> runs the modules and writes the
 report. Supply an open <code>con</code> or the connection arguments
 directly.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
 <span>  cdm_schema    <span class="op">=</span> <span class="st">"mimic_cdm"</span>,</span>
 <span>  cohort_table  <span class="op">=</span> <span class="st">"results.my_cohort"</span>,</span>
@@ -140,7 +181,7 @@ directly.</p>
 returns a list with <code>results</code> (per-module output),
 <code>report</code> (paths + traffic-light summary), and
 <code>flags</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">report</span><span class="op">$</span><span class="va">check_summary</span>   <span class="co"># one row per check: pass / warn / fail</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">flags</span>                  <span class="co"># all WARN:/FAIL: messages</span></span></code></pre></div>
 </div>
@@ -149,7 +190,7 @@ returns a list with <code>results</code> (per-module output),
 </h2>
 <p>Each module is also callable on its own when you only need one
 view.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/run_attrition.html">run_attrition</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mimic_cdm"</span>, <span class="st">"results.my_cohort"</span>, cohort_id <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>              vocab_schema <span class="op">=</span> <span class="st">"vocab"</span><span class="op">)</span></span>
 <span></span>
@@ -169,7 +210,7 @@ view.</p>
 arguments – for example prior-observation coverage warns below 70% and
 fails below 50%, and covariates with <code>|SMD| &gt; 0.1</code> are
 flagged as imbalanced. Tune them to your study’s requirements.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cdm_disconnect.html">cdm_disconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

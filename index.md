@@ -201,6 +201,60 @@ Sys.setenv(RSTUDIO_PANDOC = "/usr/lib/rstudio/resources/app/bin/quarto/bin/tools
 
 ------------------------------------------------------------------------
 
+## Try It Without a Database
+
+You do not need a live database to see the package work.
+[`example_cdm()`](reference/example_cdm.md) builds a tiny synthetic OMOP
+CDM in an in-memory DuckDB database and returns a live connection you
+can pass straight to
+[`validate_cohort()`](reference/validate_cohort.md). This needs the
+`duckdb` package installed (`install.packages("duckdb")`).
+
+``` r
+
+library(rwevalidate)
+
+con <- example_cdm()   # tiny synthetic OMOP CDM in in-memory DuckDB
+
+out <- validate_cohort(
+  cdm_schema   = "main",       # the demo CDM uses the default DuckDB schema
+  cohort_table = "cohort",
+  cohort_id    = 1,
+  con          = con,
+  vocab_schema = "main",
+  output_dir   = tempfile("rwe_demo_"),
+  render_html  = FALSE         # write the JSON sidecar only, no Pandoc needed
+)
+
+out$report$check_summary       # traffic-light table: attrition + density both pass
+cdm_disconnect(con)
+```
+
+### What is in the demo CDM
+
+The fixture is entirely synthetic. It contains no MIMIC-IV or other real
+patient data, so it is safe to ship and runs offline. It holds **10 fake
+patients in one heart-failure cohort**, with every table the attrition
+and density modules query:
+
+| Table | Contents |
+|----|----|
+| `person` | 10 patients, alternating sex, birth years 1948-1975 |
+| `observation_period` | ~3 years of coverage each, staggered start dates |
+| `condition_occurrence` | one heart-failure record each (SNOMED 316139) |
+| `drug_exposure`, `measurement`, `visit_occurrence` | one record each near the index date |
+| `death` | 2 of the 10 patients die; the rest are censored at cohort exit |
+| `concept`, `concept_ancestor` | minimal vocabulary (sex labels, heart failure, a few others) |
+| `cohort` | the 10 patients as `cohort_definition_id = 1` |
+
+It deliberately omits a comparator arm and a rich vocabulary, so it
+exercises the default attrition and density checks but not Module 1
+(concept coverage) or Module 4 (covariate feasibility). For those, and
+for any real analysis, point the package at an actual OMOP CDM as shown
+below.
+
+------------------------------------------------------------------------
+
 ## Quick Start
 
 ### Minimal call (attrition + density only)
@@ -449,4 +503,5 @@ on every push to `main`.
 
 ## License
 
-MIT. See [LICENSE](LICENSE.md).
+MIT. See
+[LICENSE](https://github.com/tavakohr/rwevalidate/blob/main/LICENSE.md).

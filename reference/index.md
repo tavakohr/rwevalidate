@@ -15,6 +15,14 @@ Open and close a CDM connection with table validation.
 - [`cdm_disconnect()`](cdm_disconnect.md) : Disconnect from a CDM
   database
 
+## Demo data
+
+A small synthetic OMOP CDM in DuckDB for examples and trying the package
+offline.
+
+- [`example_cdm()`](example_cdm.md) : Create a small in-memory OMOP CDM
+  for examples and demos
+
 ## Validation modules
 
 The four checks, callable individually.

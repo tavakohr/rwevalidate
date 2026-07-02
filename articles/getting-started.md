@@ -10,6 +10,50 @@ The code below is not executed when the vignette is built (it needs a
 live database); it is the exact sequence you would run against your own
 CDM.
 
+## Try it without a database
+
+Before pointing the package at a real CDM, you can see it run end to end
+on a small synthetic one. [`example_cdm()`](../reference/example_cdm.md)
+builds a tiny OMOP CDM (10 patients, one heart-failure cohort) in an
+in-memory DuckDB database and returns a live connection. This is the
+only chunk in this article that actually runs, and it needs the `duckdb`
+package.
+
+``` r
+
+library(rwevalidate)
+
+con <- example_cdm()
+
+out <- validate_cohort(
+  cdm_schema   = "main",
+  cohort_table = "cohort",
+  cohort_id    = 1,
+  con          = con,
+  vocab_schema = "main",
+  output_dir   = tempfile("rwe_demo_"),
+  render_html  = FALSE
+)
+#> ℹ Running attrition audit (Module 2)...
+#> ℹ Running temporal data density (Module 3)...
+#> Module 1 (concept coverage) skipped; supply `concept_ids` to enable.
+#> Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.
+#> ✔ Validation complete: 0 fail, 0 warn across 2 checks.
+
+out$report$check_summary
+#>                 section status                         maps_to
+#> 1      Cohort Attrition   pass HARPER Sec.5 / RECORD-PE Item 6
+#> 2 Temporal Data Density   pass  FDA Reliability - data accrual
+#>               detail
+#> 1 All checks passed.
+#> 2 All checks passed.
+cdm_disconnect(con)
+```
+
+The fixture is entirely synthetic and contains no real patient data.
+Everything below shows how to run the same call against your own OMOP
+CDM.
+
 ## 1. Connect
 
 [`cdm_connect()`](../reference/cdm_connect.md) opens a PostgreSQL
