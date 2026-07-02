@@ -7,13 +7,18 @@ Authors@R:
 Description: Validates instantiated patient cohorts on an OMOP Common Data
     Model database for real-world-evidence (RWE) studies. From a single
     function call it produces a structured HTML and JSON validation report
-    aligned with FDA RWE guidance (Relevance and Reliability) and HARPER
-    protocol requirements, covering concept coverage, cohort attrition,
-    temporal data density, and covariate feasibility against a comparator.
+    covering concept coverage, cohort attrition, temporal data density, and
+    covariate feasibility against a comparator. The checks are aligned with
+    the U.S. Food and Drug Administration guidance on real-world data and
+    evidence (FDA, 2023, <https://www.fda.gov/media/171667/download>), the
+    HARPER protocol template (Wang and others, 2022,
+    <doi:10.1002/pds.5507>), and the RECORD-PE reporting statement (Langan
+    and others, 2018, <doi:10.1136/bmj.k3532>).
 License: MIT + file LICENSE
 URL: https://github.com/tavakohr/rwevalidate
 BugReports: https://github.com/tavakohr/rwevalidate/issues
 Encoding: UTF-8
+Language: en-US
 Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1)
