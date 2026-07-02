@@ -17,9 +17,9 @@ The package was built because no existing OHDSI tool combines cohort-level attri
 
 ## Why This Package Exists
 
-When you submit an RWE study to a regulator, two questions always come up. First, is the data actually relevant to the research question (are the right patients captured with the right concepts)? Second, is the data reliable enough to support causal inference (is follow-up complete, are records dense enough over time, are the cohorts comparable)?
+When you submit an RWE study to a regulator, they always ask two questions. First, is the data relevant to the research question? In other words, are the right patients captured, with the right concepts? Second, is the data reliable enough to support causal inference? In other words, is follow-up complete, are records frequent enough over time, and are the two cohorts comparable?
 
-Answering both questions in a structured, reproducible way currently requires stitching together several tools or writing custom SQL. `rwevalidate` handles that stitching. You point it at an instantiated cohort table, and it returns a single list object plus a formatted report that maps every check directly to a regulatory framework.
+Today, answering both questions in a clear and reproducible way means combining several tools or writing custom SQL by hand. `rwevalidate` does that work for you. You give it a cohort table that already exists in the database, and it returns one list object and a formatted report. Every check in the report maps directly to a regulatory framework.
 
 ---
 
@@ -40,7 +40,7 @@ Every check in `rwevalidate` traces back to a published regulatory document or r
 U.S. Food and Drug Administration. *Considerations for the Use of Real-World Data and Real-World Evidence to Support Regulatory Decision-Making for Drug and Biological Products.* Guidance for Industry. Silver Spring, MD: FDA; 2023.
 Available at: [www.fda.gov/media/171667/download](https://www.fda.gov/media/171667/download)
 
-The FDA guidance organizes its evaluation of RWE studies around two axes. Relevance asks whether the data source captures the population, exposure, outcome, and covariates that the study intends to measure. Reliability asks whether the data are complete, consistently recorded, and free from systematic dropout or ascertainment bias. Modules 1 and 3 in `rwevalidate` answer these two axes directly.
+The FDA guidance looks at RWE studies from two angles. Relevance asks whether the data source captures the population, exposure, outcome, and covariates that the study wants to measure. Reliability asks whether the data are complete, recorded in a consistent way, and free from systematic dropout or bias in how outcomes are captured. Modules 1 and 3 in `rwevalidate` answer these two questions directly.
 
 **HARPER Protocol (2022)**
 Wang SV, Pottegard A, Crown W, et al. *HARmonized Protocol Template to Enhance Reproducibility of hypothesis evaluating real-world evidence studies on treatment effects: A good practices report of a joint ISPE/ISPOR task force.* Pharmacoepidemiol Drug Saf. 2023;32(1):44-55.
