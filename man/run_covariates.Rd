@@ -16,7 +16,8 @@ run_covariates(
   smd_warn_threshold = 0.1,
   power_baseline_rate = 0.15,
   power_effect_rate = 0.3,
-  power_sig_level = 0.05
+  power_sig_level = 0.05,
+  power_warn_threshold = 0.8
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ imbalanced. Default 0.1 (standard).}
 event rates for the two-proportion power calculation. Defaults 0.15, 0.30.}
 
 \item{power_sig_level}{Significance level for the power calculation. Default 0.05.}
+
+\item{power_warn_threshold}{Power below this value flags a \code{WARN}. Default 0.80.}
 }
 \value{
 A named list: \code{smd_table}, \code{prevalence_table}, \code{power}, \code{flags}.

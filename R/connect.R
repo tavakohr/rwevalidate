@@ -18,6 +18,30 @@ REQUIRED_CLINICAL_TABLES <- c(
 #' @noRd
 REQUIRED_VOCAB_TABLES <- c("concept", "concept_ancestor")
 
+#' Validate a SQL identifier (schema name or schema-qualified table name)
+#'
+#' Schema, vocabulary-schema, and cohort-table names are interpolated into SQL as
+#' raw identifiers (they cannot be passed as bound parameters). This guard makes
+#' sure the caller-supplied value looks like a plain identifier before it reaches
+#' a query, which blocks SQL injection through those arguments. A single dot is
+#' allowed so schema-qualified names such as `results.my_cohort` pass.
+#'
+#' @param x The value to check.
+#' @param arg The argument name, used in the error message.
+#'
+#' @return Invisibly `x` when valid; otherwise aborts.
+#'
+#' @keywords internal
+#' @noRd
+check_ident <- function(x, arg) {
+  if (!is.character(x) || length(x) != 1 || is.na(x) ||
+      !grepl("^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)?$", x)) {
+    cli::cli_abort(
+      "{.arg {arg}} must be a plain SQL identifier (letters, digits, underscore, one optional schema dot); got {.val {x}}.")
+  }
+  invisible(x)
+}
+
 #' Lower-cased table names present in a schema
 #'
 #' Uses `information_schema.tables` (available on both PostgreSQL and DuckDB).
@@ -142,7 +166,7 @@ cdm_connect <- function(host = "localhost",
     validate_cdm_tables(con, cdm_schema, vocab_schema),
     error = function(e) {
       DBI::dbDisconnect(con)
-      cli::cli_abort(conditionMessage(e), call = NULL)
+      cli::cli_abort("{conditionMessage(e)}", call = NULL)
     }
   )
 

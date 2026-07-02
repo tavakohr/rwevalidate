@@ -19,9 +19,10 @@ CONCEPT_DOMAIN_COLS <- list(
 #'
 #' @param con A live `DBI` connection (see [cdm_connect()]).
 #' @param cdm_schema Schema holding the clinical CDM tables.
-#' @param cohort_table Cohort table, schema-qualified (currently unused; reserved
-#'   for cohort-restricted prevalence in a later version).
-#' @param cohort_id Integer cohort definition id (reserved, see `cohort_table`).
+#' @param cohort_table Cohort table, schema-qualified. Optional and currently
+#'   unused; reserved for cohort-restricted prevalence in a later version.
+#' @param cohort_id Integer cohort definition id. Optional and reserved, see
+#'   `cohort_table`.
 #' @param concept_ids Numeric vector of cohort-defining seed concept id(s). Their
 #'   descendants are expanded via `{vocab_schema}.concept_ancestor`.
 #' @param domain Domain the seed concepts live in; one of the names of the
@@ -47,8 +48,8 @@ CONCEPT_DOMAIN_COLS <- list(
 #' @export
 run_concepts <- function(con,
                          cdm_schema,
-                         cohort_table,
-                         cohort_id,
+                         cohort_table = NULL,
+                         cohort_id = NULL,
                          concept_ids,
                          domain = "condition",
                          vocab_schema = "vocab",
@@ -61,6 +62,8 @@ run_concepts <- function(con,
     is.numeric(concept_ids), length(concept_ids) >= 1,
     domain %in% names(CONCEPT_DOMAIN_COLS)
   )
+  check_ident(cdm_schema, "cdm_schema")
+  check_ident(vocab_schema, "vocab_schema")
   ids <- paste(as.integer(concept_ids), collapse = ", ")
   flags <- character(0)
   dspec <- CONCEPT_DOMAIN_COLS[[domain]]
@@ -120,19 +123,24 @@ run_concepts <- function(con,
     n_records  <- as.integer(row$n_records)
     n_unmapped <- as.integer(row$n_unmapped)
     pct_mapped <- if (n_records > 0) round(100 * (n_records - n_unmapped) / n_records, 1) else NA_real_
-
-    if (!is.na(pct_mapped) && n_records > 0) {
-      pct_unmapped <- 100 - pct_mapped
-      if (pct_unmapped > unmapped_warn_pct) {
-        flags[[length(flags) + 1L]] <<- glue::glue(
-          "WARN: Domain '{dom}' has {pct_unmapped}% records unmapped (concept_id = 0).")
-      }
-    }
     data.frame(domain = dom, n_records = n_records, n_unmapped = n_unmapped,
                pct_mapped = pct_mapped, stringsAsFactors = FALSE)
   })
   mapping_by_domain <- do.call(rbind, map_parts)
   rownames(mapping_by_domain) <- NULL
+
+  # Flag domains with a high unmapped share (concept_id = 0), in one pass over
+  # the assembled table so the map above has no side effects.
+  for (i in seq_len(nrow(mapping_by_domain))) {
+    mr <- mapping_by_domain[i, ]
+    if (!is.na(mr$pct_mapped) && mr$n_records > 0) {
+      pct_unmapped <- 100 - mr$pct_mapped
+      if (pct_unmapped > unmapped_warn_pct) {
+        flags <- c(flags, glue::glue(
+          "WARN: Domain '{mr$domain}' has {pct_unmapped}% records unmapped (concept_id = 0)."))
+      }
+    }
+  }
 
   list(
     prevalence        = prevalence,

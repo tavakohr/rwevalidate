@@ -56,6 +56,27 @@ test_that("validate_cdm_tables aborts when the vocab schema lacks vocab tables",
   )
 })
 
+test_that("check_ident accepts valid identifiers and rejects injection", {
+  expect_invisible(check_ident("mimic_cdm", "cdm_schema"))
+  expect_invisible(check_ident("results.my_cohort", "cohort_table"))
+  expect_error(check_ident("a; DROP TABLE person", "cohort_table"), "identifier")
+  expect_error(check_ident("a.b.c", "cohort_table"), "identifier")
+  expect_error(check_ident(c("a", "b"), "cdm_schema"), "identifier")
+  expect_error(check_ident(NA_character_, "cdm_schema"), "identifier")
+})
+
+test_that("run_covariates rejects a comparator equal to the cohort id", {
+  skip_if_not_installed("duckdb")
+  con <- setup_mock_cdm()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+
+  expect_error(
+    run_covariates(con, cdm_schema = "main", cohort_table = "test_cohort",
+                   cohort_id = 1, comparator_id = 1, vocab_schema = "main"),
+    regexp = "differ"
+  )
+})
+
 test_that("cdm_disconnect closes the connection", {
   skip_if_not_installed("duckdb")
   con <- setup_mock_cdm()
