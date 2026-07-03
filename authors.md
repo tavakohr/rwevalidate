@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/tavakohr/rwevalidate/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/tavakohr/rwevalidate/blob/v0.1.0/DESCRIPTION)
 
 Tavakoli H (2026). *rwevalidate: Validate Patient Cohorts for Real-World
 Evidence Studies on OMOP CDM*. R package version 0.1.0,
