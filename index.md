@@ -21,6 +21,20 @@ an OMOP CDM.
 
 ------------------------------------------------------------------------
 
+## Example Output
+
+A single [`validate_cohort()`](reference/validate_cohort.md) call
+produces this self-contained HTML report. Each check maps to a
+regulatory framework and resolves to a pass / warn / fail.
+
+![rwevalidate validation summary](reference/figures/report-summary.png)
+
+rwevalidate validation summary
+
+*Traffic-light validation summary from the built-in synthetic cohort.*
+
+------------------------------------------------------------------------
+
 ## Why This Package Exists
 
 When you submit an RWE study to a regulator, they always ask two
