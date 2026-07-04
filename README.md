@@ -15,6 +15,17 @@ The package was built because no existing OHDSI tool combines cohort-level attri
 
 ---
 
+## Example Output
+
+A single `validate_cohort()` call produces this self-contained HTML report.
+Each check maps to a regulatory framework and resolves to a pass / warn / fail.
+
+![rwevalidate validation summary](man/figures/report-summary.png)
+
+*Traffic-light validation summary from the built-in synthetic cohort.*
+
+---
+
 ## Why This Package Exists
 
 When you submit an RWE study to a regulator, they always ask two questions. First, is the data relevant to the research question? In other words, are the right patients captured, with the right concepts? Second, is the data reliable enough to support causal inference? In other words, is follow-up complete, are records frequent enough over time, and are the two cohorts comparable?

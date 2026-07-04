@@ -10,3 +10,6 @@
 src/*.o
 src/*.so
 src/*.dll
+
+# Generated demo report artifacts
+rwe_demo/
