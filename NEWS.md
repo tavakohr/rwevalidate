@@ -1,3 +1,16 @@
+# rwevalidate 0.1.1
+
+CRAN resubmission addressing reviewer feedback; no functional changes.
+
+* DESCRIPTION: all acronyms (OMOP, CDM, RWE, HTML, JSON, FDA, HARPER,
+  RECORD-PE) are now explained at first use, and references follow the
+  `authors (year) <doi:...>` format.
+* Removed the `\dontrun{}` example from `validate_cohort()`; the live-database
+  call is now shown in the function's Details section.
+* Added an executable example to `cdm_disconnect()`. The only remaining
+  `\dontrun{}` example is `cdm_connect()`, which requires a live PostgreSQL
+  server and credentials.
+
 # rwevalidate 0.1.0
 
 First public release. `rwevalidate` validates an instantiated OMOP CDM cohort

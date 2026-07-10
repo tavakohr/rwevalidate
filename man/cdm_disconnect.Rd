@@ -15,3 +15,12 @@ Invisibly returns the result of \code{\link[DBI:dbDisconnect]{DBI::dbDisconnect(
 \description{
 Disconnect from a CDM database
 }
+\examples{
+# Works on any DBI connection, demonstrated here on the bundled in-memory
+# DuckDB example CDM (no database server needed).
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  cdm_disconnect(con)
+}
+
+}

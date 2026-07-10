@@ -131,6 +131,9 @@ validate_cdm_tables <- function(con, cdm_schema, vocab_schema = cdm_schema,
 #'
 #' @examples
 #' \dontrun{
+#' # Requires a live PostgreSQL OMOP CDM server and real credentials, so this
+#' # cannot be executed during checks. For a runnable, database-free demo of
+#' # the package, see example_cdm() and validate_cohort().
 #' con <- cdm_connect(
 #'   dbname = "omop", user = "me", password = "secret",
 #'   cdm_schema = "mimiciv_omop", vocab_schema = "vocab"
@@ -181,6 +184,14 @@ cdm_connect <- function(host = "localhost",
 #' @param con A live `DBI` connection returned by [cdm_connect()].
 #'
 #' @return Invisibly returns the result of [DBI::dbDisconnect()].
+#'
+#' @examples
+#' # Works on any DBI connection, demonstrated here on the bundled in-memory
+#' # DuckDB example CDM (no database server needed).
+#' if (requireNamespace("duckdb", quietly = TRUE)) {
+#'   con <- example_cdm()
+#'   cdm_disconnect(con)
+#' }
 #'
 #' @export
 cdm_disconnect <- function(con) {

@@ -82,6 +82,18 @@ with FDA RWE and HARPER frameworks.
 Supply either an open \code{con} (e.g. for DuckDB testing) or PostgreSQL connection
 arguments (\code{dbname}, \code{user}, \code{password}, ...). Connections opened internally
 are closed on exit; a connection passed in via \code{con} is left open.
+
+Against a live PostgreSQL OMOP CDM, a typical call looks like:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{validate_cohort(
+  cdm_schema   = "mimic_cdm",
+  cohort_table = "results.rwevalidate_test_cohort",
+  cohort_id    = 1,
+  dbname = "FHIR", user = "me", password = "secret",
+  vocab_schema = "vocab",
+  output_dir   = "./validation_report"
+)
+}\if{html}{\out{</div>}}
 }
 \examples{
 # Runnable demo on a small in-memory DuckDB CDM (no database needed).
@@ -99,18 +111,6 @@ if (requireNamespace("duckdb", quietly = TRUE)) {
   )
   print(out$report$check_summary)
   cdm_disconnect(con)
-}
-
-\dontrun{
-# Against a live PostgreSQL OMOP CDM:
-validate_cohort(
-  cdm_schema   = "mimic_cdm",
-  cohort_table = "results.rwevalidate_test_cohort",
-  cohort_id    = 1,
-  dbname = "FHIR", user = "me", password = "secret",
-  vocab_schema = "vocab",
-  output_dir   = "./validation_report"
-)
 }
 
 }

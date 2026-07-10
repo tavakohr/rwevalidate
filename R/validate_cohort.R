@@ -38,6 +38,20 @@ build_data_source <- function(con, cdm_schema) {
 #' arguments (`dbname`, `user`, `password`, ...). Connections opened internally
 #' are closed on exit; a connection passed in via `con` is left open.
 #'
+#' @details
+#' Against a live PostgreSQL OMOP CDM, a typical call looks like:
+#'
+#' ```r
+#' validate_cohort(
+#'   cdm_schema   = "mimic_cdm",
+#'   cohort_table = "results.rwevalidate_test_cohort",
+#'   cohort_id    = 1,
+#'   dbname = "FHIR", user = "me", password = "secret",
+#'   vocab_schema = "vocab",
+#'   output_dir   = "./validation_report"
+#' )
+#' ```
+#'
 #' @param cdm_schema Schema holding the clinical CDM tables (e.g. `"mimic_cdm"`).
 #' @param cohort_table Cohort table, schema-qualified
 #'   (e.g. `"results.rwevalidate_test_cohort"`).
@@ -86,18 +100,6 @@ build_data_source <- function(con, cdm_schema) {
 #'   )
 #'   print(out$report$check_summary)
 #'   cdm_disconnect(con)
-#' }
-#'
-#' \dontrun{
-#' # Against a live PostgreSQL OMOP CDM:
-#' validate_cohort(
-#'   cdm_schema   = "mimic_cdm",
-#'   cohort_table = "results.rwevalidate_test_cohort",
-#'   cohort_id    = 1,
-#'   dbname = "FHIR", user = "me", password = "secret",
-#'   vocab_schema = "vocab",
-#'   output_dir   = "./validation_report"
-#' )
 #' }
 #'
 #' @export

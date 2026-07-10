@@ -1,19 +1,22 @@
 Package: rwevalidate
 Title: Validate Patient Cohorts for Real-World Evidence Studies on OMOP CDM
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     person("Hamid", "Tavakoli", email = "htavakoli@gmail.com",
            role = c("aut", "cre"))
-Description: Validates instantiated patient cohorts on an OMOP Common Data
-    Model database for real-world-evidence (RWE) studies. From a single
-    function call it produces a structured HTML and JSON validation report
-    covering concept coverage, cohort attrition, temporal data density, and
-    covariate feasibility against a comparator. The checks are aligned with
-    the U.S. Food and Drug Administration guidance on real-world data and
-    evidence (FDA, 2023, <https://www.fda.gov/media/171667/download>), the
-    HARPER protocol template (Wang and others, 2022,
-    <doi:10.1002/pds.5507>), and the RECORD-PE reporting statement (Langan
-    and others, 2018, <doi:10.1136/bmj.k3532>).
+Description: Validates instantiated patient cohorts on an Observational
+    Medical Outcomes Partnership (OMOP) Common Data Model (CDM) database for
+    real-world-evidence (RWE) studies. From a single function call it produces
+    a structured validation report in Hypertext Markup Language (HTML) and
+    JavaScript Object Notation (JSON) covering concept coverage, cohort
+    attrition, temporal data density, and covariate feasibility against a
+    comparator. The checks are aligned with the United States Food and Drug
+    Administration (FDA) guidance on real-world data and evidence, FDA (2023)
+    <https://www.fda.gov/media/171667/download>, the HARmonized Protocol
+    Template to Enhance Reproducibility (HARPER), Wang and others (2022)
+    <doi:10.1002/pds.5507>, and the REporting of studies Conducted using
+    Observational Routinely collected Data for PharmacoEpidemiology
+    (RECORD-PE) statement, Langan and others (2018) <doi:10.1136/bmj.k3532>.
 License: MIT + file LICENSE
 URL: https://github.com/tavakohr/rwevalidate
 BugReports: https://github.com/tavakohr/rwevalidate/issues
