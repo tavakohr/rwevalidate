@@ -18,3 +18,17 @@ cdm_disconnect(con)
 
 Invisibly returns the result of
 [`DBI::dbDisconnect()`](https://dbi.r-dbi.org/reference/dbDisconnect.html).
+
+## Examples
+
+``` r
+# Works on any DBI connection, demonstrated here on the bundled in-memory
+# DuckDB example CDM (no database server needed).
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  cdm_disconnect(con)
+}
+#> duckdb: caching downloaded extensions in the package library:
+#> ℹ /home/runner/work/_temp/Library/duckdb/extensions
+#> ℹ This is removed when the package is re-installed; see `?duckdb_storage` to choose a different location.
+```

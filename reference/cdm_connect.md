@@ -61,6 +61,9 @@ A live `DBI` connection to the CDM database.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Requires a live PostgreSQL OMOP CDM server and real credentials, so this
+# cannot be executed during checks. For a runnable, database-free demo of
+# the package, see example_cdm() and validate_cohort().
 con <- cdm_connect(
   dbname = "omop", user = "me", password = "secret",
   cdm_schema = "mimiciv_omop", vocab_schema = "vocab"

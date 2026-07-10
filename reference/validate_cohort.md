@@ -114,6 +114,17 @@ connection arguments (`dbname`, `user`, `password`, ...). Connections
 opened internally are closed on exit; a connection passed in via `con`
 is left open.
 
+Against a live PostgreSQL OMOP CDM, a typical call looks like:
+
+    validate_cohort(
+      cdm_schema   = "mimic_cdm",
+      cohort_table = "results.rwevalidate_test_cohort",
+      cohort_id    = 1,
+      dbname = "FHIR", user = "me", password = "secret",
+      vocab_schema = "vocab",
+      output_dir   = "./validation_report"
+    )
+
 ## Examples
 
 ``` r
@@ -144,16 +155,4 @@ if (requireNamespace("duckdb", quietly = TRUE)) {
 #>               detail
 #> 1 All checks passed.
 #> 2 All checks passed.
-
-if (FALSE) { # \dontrun{
-# Against a live PostgreSQL OMOP CDM:
-validate_cohort(
-  cdm_schema   = "mimic_cdm",
-  cohort_table = "results.rwevalidate_test_cohort",
-  cohort_id    = 1,
-  dbname = "FHIR", user = "me", password = "secret",
-  vocab_schema = "vocab",
-  output_dir   = "./validation_report"
-)
-} # }
 ```
