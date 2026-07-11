@@ -15,6 +15,16 @@ CRAN resubmission addressing reviewer feedback; no functional changes.
   remaining `\dontrun{}` example is
   [`cdm_connect()`](../reference/cdm_connect.md), which requires a live
   PostgreSQL server and credentials.
+- Expanded the Title to spell out “OMOP Common Data Model”.
+- [`example_cdm()`](../reference/example_cdm.md) now builds a 20-person,
+  two-arm demo CDM (target and comparator), so every exported module —
+  including [`run_covariates()`](../reference/run_covariates.md) — has a
+  runnable example against the bundled database.
+- Added `@examples` to
+  [`run_attrition()`](../reference/run_attrition.md),
+  [`run_density()`](../reference/run_density.md),
+  [`run_concepts()`](../reference/run_concepts.md), and
+  [`run_covariates()`](../reference/run_covariates.md).
 
 ## rwevalidate 0.1.0
 

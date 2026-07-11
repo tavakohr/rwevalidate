@@ -70,3 +70,16 @@ A named list:
 - flags:
 
   character vector of `WARN:`/`FAIL:` messages
+
+## Examples
+
+``` r
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  res <- run_density(con, cdm_schema = "main", cohort_table = "cohort",
+                     cohort_id = 1)
+  head(res$density_by_domain)
+  res$followup_summary
+  cdm_disconnect(con)
+}
+```

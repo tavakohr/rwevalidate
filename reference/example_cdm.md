@@ -1,12 +1,15 @@
 # Create a small in-memory OMOP CDM for examples and demos
 
-Builds a tiny synthetic OMOP CDM (10 persons) in an in-memory DuckDB
+Builds a tiny synthetic OMOP CDM (20 persons) in an in-memory DuckDB
 database and returns a live connection. Every table `rwevalidate`
-queries for the attrition and density modules is populated, together
-with a `cohort` table that has the standard `subject_id`,
-`cohort_definition_id`, `cohort_start_date`, and `cohort_end_date`
-columns. The clinical tables and a minimal vocabulary both live in the
-default `main` schema.
+queries for the concept, attrition, density, and covariate modules is
+populated, together with a `cohort` table that has the standard
+`subject_id`, `cohort_definition_id`, `cohort_start_date`, and
+`cohort_end_date` columns. The `cohort` table carries two arms so all
+four modules can be demonstrated: persons 1-10 are the target cohort
+(`cohort_definition_id = 1`) and persons 11-20 are a comparator
+(`cohort_definition_id = 2`). The clinical tables and a minimal
+vocabulary both live in the default `main` schema.
 
 ## Usage
 

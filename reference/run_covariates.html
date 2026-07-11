@@ -131,6 +131,20 @@ event rates for the two-proportion power calculation. Defaults 0.15, 0.30.</p></
     <p>A named list: <code>smd_table</code>, <code>prevalence_table</code>, <code>power</code>, <code>flags</code>.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"duckdb"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="example_cdm.html">example_cdm</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># The demo CDM ships two arms: target = 1, comparator = 2.</span></span></span>
+<span class="r-in"><span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">run_covariates</span><span class="op">(</span><span class="va">con</span>, cdm_schema <span class="op">=</span> <span class="st">"main"</span>, cohort_table <span class="op">=</span> <span class="st">"cohort"</span>,</span></span>
+<span class="r-in"><span>                        cohort_id <span class="op">=</span> <span class="fl">1</span>, comparator_id <span class="op">=</span> <span class="fl">2</span>, vocab_schema <span class="op">=</span> <span class="st">"main"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">res</span><span class="op">$</span><span class="va">smd_table</span></span></span>
+<span class="r-in"><span>  <span class="va">res</span><span class="op">$</span><span class="va">power</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="cdm_disconnect.html">cdm_disconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
