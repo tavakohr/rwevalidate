@@ -2,49 +2,47 @@
 
 ## Resubmission
 
-This is a resubmission (version 0.1.2) addressing Uwe Ligges's comment of
-2026-07-11 on version 0.1.1. Thank you for the review.
+Thanks very much for the quick review. This is version 0.1.2, and it fixes the
+three words you flagged in the Description.
 
-The three mixed-case fragments flagged in the Description ("HARmonized",
-"REporting", "PharmacoEpidemiology") have been rewritten in normal
-capitalization: "the Harmonized Protocol Template to Enhance Reproducibility
-(HARPER)" and "the Reporting of Studies Conducted Using Observational
-Routinely-Collected Data for Pharmacoepidemiology (RECORD-PE) statement". The
-acronyms themselves remain in parentheses, so the Description still explains
-them, and the spell check no longer flags the expansions.
+I rewrote the two framework names so they no longer use the mixed-case styling
+that the spell check picked up. "HARmonized Protocol Template to Enhance
+Reproducibility" is now "Harmonized Protocol Template to Enhance
+Reproducibility (HARPER)", and "REporting of studies ... for
+PharmacoEpidemiology" is now "Reporting of Studies Conducted Using
+Observational Routinely-Collected Data for Pharmacoepidemiology (RECORD-PE)".
+Each acronym still appears in parentheses, so the Description continues to
+spell it out, and the spell check is now clean.
 
-The earlier review of 2026-07-10 (Konstanze Lauseker) is still addressed:
-all acronyms are explained at first use, the references use the
-authors (year) <doi:...> form, and only cdm_connect() keeps a \dontrun{}
-example (it requires a live PostgreSQL server; every other exported function
-has a runnable example against the bundled DuckDB example CDM).
+Everything from the first review still holds. Every acronym is explained the
+first time it appears, the references use the authors (year) <doi:...> form,
+and cdm_connect() is the only example left in \dontrun{}, because it needs a
+live PostgreSQL server. Every other exported function has an example that runs
+during the check against the small DuckDB database the package ships with.
 
 ## Submission summary
 
-The package validates an instantiated OMOP CDM patient cohort for real-world
-evidence use and writes an HTML and JSON report.
+The package checks an existing OMOP CDM patient cohort for real-world evidence
+use and writes an HTML and JSON report.
 
 ## R CMD check results
 
 Local (Windows 11, R 4.6.0), R CMD check --as-cran: 0 errors | 0 warnings |
 0 notes.
 
-The only remaining note is the standard "New submission" note, together with
-one sub-item that is a false positive:
-
-* Possibly misspelled words in DESCRIPTION: "CDM", "OMOP", "RWE",
-  "comparator", and "Langan". These are all correct: OMOP, CDM, and RWE are
-  the abbreviations that the Description expands at first use; "comparator" is
-  the standard epidemiological term for the reference arm; and "Langan" is an
-  author surname in a cited reference.
+The one remaining note is the usual "New submission" note. It also lists a few
+words as possibly misspelled in the Description ("CDM", "OMOP", "RWE",
+"comparator", and "Langan"), but all of them are correct: OMOP, CDM, and RWE
+are the abbreviations the Description spells out at first use, "comparator" is
+the usual epidemiology term for the reference arm, and "Langan" is an author
+name in one of the references.
 
 ## Examples
 
-The only example wrapped in \dontrun{} is cdm_connect(), which requires a
-live PostgreSQL server and credentials (see Resubmission point 3). All other
-exported functions have executable examples that run during the check against
-an in-memory DuckDB CDM via the exported example_cdm() helper. The test suite
-exercises every module the same way.
+cdm_connect() is the only example wrapped in \dontrun{}, since it needs a live
+PostgreSQL server and credentials. Every other exported function has an example
+that runs during the check, using the in-memory DuckDB CDM from the
+example_cdm() helper. The tests cover every module the same way.
 
 ## Test environments
 
