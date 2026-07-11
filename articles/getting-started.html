@@ -89,6 +89,10 @@ package.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tavakohr/rwevalidate" class="external-link">rwevalidate</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example_cdm.html">example_cdm</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; duckdb is keeping downloaded extensions in a temporary directory:</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> /tmp/Rtmpf2pMDt/duckdb/extensions</span></span>
+<span><span class="co">#&gt; This is removed when the R session ends, so extensions are re-downloaded each session.</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.</span></span>
 <span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_cohort.html">validate_cohort</a></span><span class="op">(</span></span>
 <span>  cdm_schema   <span class="op">=</span> <span class="st">"main"</span>,</span>
@@ -101,9 +105,7 @@ package.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Running attrition audit (Module 2)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Running temporal data density (Module 3)...</span></span>
-<span><span class="co">#&gt; Module 1 (concept coverage) skipped; supply `concept_ids` to enable.</span></span>
-<span><span class="co">#&gt; Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Validation complete: 0 fail, 0 warn across 2 checks.</span></span>
+<span><span class="co">#&gt; Module 1 (concept coverage) skipped; supply `concept_ids` to enable.Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.<span style="color: #00BB00;">✔</span> Validation complete: 0 fail, 0 warn across 2 checks.</span></span>
 <span></span>
 <span><span class="va">out</span><span class="op">$</span><span class="va">report</span><span class="op">$</span><span class="va">check_summary</span></span>
 <span><span class="co">#&gt;                 section status                         maps_to</span></span>

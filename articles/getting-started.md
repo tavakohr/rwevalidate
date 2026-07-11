@@ -24,6 +24,10 @@ package.
 library(rwevalidate)
 
 con <- example_cdm()
+#> duckdb is keeping downloaded extensions in a temporary directory:
+#> ℹ /tmp/Rtmpf2pMDt/duckdb/extensions
+#> This is removed when the R session ends, so extensions are re-downloaded each session.
+#> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 
 out <- validate_cohort(
   cdm_schema   = "main",
@@ -36,9 +40,7 @@ out <- validate_cohort(
 )
 #> ℹ Running attrition audit (Module 2)...
 #> ℹ Running temporal data density (Module 3)...
-#> Module 1 (concept coverage) skipped; supply `concept_ids` to enable.
-#> Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.
-#> ✔ Validation complete: 0 fail, 0 warn across 2 checks.
+#> Module 1 (concept coverage) skipped; supply `concept_ids` to enable.Module 4 (covariate feasibility) skipped; supply `comparator_id` to enable.✔ Validation complete: 0 fail, 0 warn across 2 checks.
 
 out$report$check_summary
 #>                 section status                         maps_to
