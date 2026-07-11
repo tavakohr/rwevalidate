@@ -1,6 +1,7 @@
 # rwevalidate
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/rwevalidate)](https://CRAN.R-project.org/package=rwevalidate)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/tavakohr/rwevalidate/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tavakohr/rwevalidate/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/tavakohr/rwevalidate/graph/badge.svg)](https://app.codecov.io/gh/tavakohr/rwevalidate)
