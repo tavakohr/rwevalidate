@@ -25,7 +25,7 @@ library(rwevalidate)
 
 con <- example_cdm()
 #> duckdb is keeping downloaded extensions in a temporary directory:
-#> ℹ /tmp/Rtmpf2pMDt/duckdb/extensions
+#> ℹ /tmp/RtmpNIdE5O/duckdb/extensions
 #> This is removed when the R session ends, so extensions are re-downloaded each session.
 #> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 
