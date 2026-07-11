@@ -47,3 +47,14 @@ Profiles longitudinal data accrual around the index date: record density per
 patient per month across clinical domains, and follow-up completeness with a
 censoring-reason breakdown. Maps to FDA RWE Reliability (data accrual).
 }
+\examples{
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  res <- run_density(con, cdm_schema = "main", cohort_table = "cohort",
+                     cohort_id = 1)
+  head(res$density_by_domain)
+  res$followup_summary
+  cdm_disconnect(con)
+}
+
+}

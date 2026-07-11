@@ -68,3 +68,14 @@ attrition flowchart (how many subjects each inclusion or exclusion criterion
 removed), because the cohort table does not carry the criteria that built it.
 Per-criterion attrition is planned for a later version.
 }
+\examples{
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  res <- run_attrition(con, cdm_schema = "main", cohort_table = "cohort",
+                       cohort_id = 1, vocab_schema = "main")
+  res$cohort_size
+  res$demographics
+  cdm_disconnect(con)
+}
+
+}

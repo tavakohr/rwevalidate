@@ -1,5 +1,6 @@
 Package: rwevalidate
-Title: Validate Patient Cohorts for Real-World Evidence Studies on OMOP CDM
+Title: Validate Patient Cohorts for Real-World Evidence Studies on the OMOP
+    Common Data Model
 Version: 0.1.1
 Authors@R:
     person("Hamid", "Tavakoli", email = "htavakoli@gmail.com",
@@ -17,6 +18,8 @@ Description: Validates instantiated patient cohorts on an Observational
     <doi:10.1002/pds.5507>, and the REporting of studies Conducted using
     Observational Routinely collected Data for PharmacoEpidemiology
     (RECORD-PE) statement, Langan and others (2018) <doi:10.1136/bmj.k3532>.
+    A self-contained example database is bundled so the checks can be run
+    without a live database connection.
 License: MIT + file LICENSE
 URL: https://github.com/tavakohr/rwevalidate
 BugReports: https://github.com/tavakohr/rwevalidate/issues

@@ -1,16 +1,19 @@
 #' Create a small in-memory OMOP CDM for examples and demos
 #'
-#' Builds a tiny synthetic OMOP CDM (10 persons) in an in-memory DuckDB database
+#' Builds a tiny synthetic OMOP CDM (20 persons) in an in-memory DuckDB database
 #' and returns a live connection. Every table `rwevalidate` queries for the
-#' attrition and density modules is populated, together with a `cohort` table
-#' that has the standard `subject_id`, `cohort_definition_id`,
-#' `cohort_start_date`, and `cohort_end_date` columns. The clinical tables and a
-#' minimal vocabulary both live in the default `main` schema.
+#' concept, attrition, density, and covariate modules is populated, together
+#' with a `cohort` table that has the standard `subject_id`,
+#' `cohort_definition_id`, `cohort_start_date`, and `cohort_end_date` columns.
+#' The `cohort` table carries two arms so all four modules can be demonstrated:
+#' persons 1-10 are the target cohort (`cohort_definition_id = 1`) and persons
+#' 11-20 are a comparator (`cohort_definition_id = 2`). The clinical tables and
+#' a minimal vocabulary both live in the default `main` schema.
 #'
 #' This exists so the package can be tried, and its examples can run, without a
-#' live database connection. It is a synthetic demo fixture, not a substitute for
-#' a real CDM. The `duckdb` package (a soft dependency) must be installed. The
-#' caller owns the returned connection and should close it with
+#' live database connection. It is a synthetic demo fixture, not a substitute
+#' for a real CDM. The `duckdb` package (a soft dependency) must be installed.
+#' The caller owns the returned connection and should close it with
 #' [cdm_disconnect()].
 #'
 #' @return A live `DBI` connection to an in-memory DuckDB OMOP CDM.
@@ -36,7 +39,7 @@ example_cdm <- function() {
 
   con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 
-  n   <- 10L
+  n   <- 20L
   ids <- seq_len(n)
 
   op_start <- as.Date("2015-01-01") + ids * 30L
@@ -94,6 +97,14 @@ example_cdm <- function() {
     visit_type_concept_id = 44818517L
   )
 
+  procedure_occurrence <- data.frame(
+    procedure_occurrence_id   = ids,
+    person_id                 = ids,
+    procedure_concept_id      = 4107731L,       # echocardiography
+    procedure_date            = index + 3L,
+    procedure_type_concept_id = 38000275L
+  )
+
   # First two persons die; the rest exit via the cohort end date.
   dead <- ids[ids <= 2L]
   death <- data.frame(
@@ -103,13 +114,14 @@ example_cdm <- function() {
   )
 
   concept <- data.frame(
-    concept_id       = c(8507L, 8532L, 316139L, 1308216L, 3016723L, 9201L),
+    concept_id       = c(8507L, 8532L, 316139L, 1308216L, 3016723L, 9201L,
+                         4107731L),
     concept_name     = c("MALE", "FEMALE", "Heart failure", "lisinopril",
-                         "Creatinine", "Inpatient Visit"),
+                         "Creatinine", "Inpatient Visit", "Echocardiography"),
     domain_id        = c("Gender", "Gender", "Condition", "Drug",
-                         "Measurement", "Visit"),
+                         "Measurement", "Visit", "Procedure"),
     vocabulary_id    = c("Gender", "Gender", "SNOMED", "RxNorm", "LOINC",
-                         "Visit"),
+                         "Visit", "SNOMED"),
     standard_concept = "S"
   )
 
@@ -120,9 +132,10 @@ example_cdm <- function() {
     max_levels_of_separation = 0L
   )
 
+  # Two arms: persons 1-10 are the target cohort, persons 11-20 the comparator.
   cohort <- data.frame(
     subject_id           = ids,
-    cohort_definition_id = 1L,
+    cohort_definition_id = ifelse(ids <= 10L, 1L, 2L),
     cohort_start_date    = index,
     cohort_end_date      = index + 200L
   )
@@ -134,6 +147,7 @@ example_cdm <- function() {
     drug_exposure        = drug_exposure,
     measurement          = measurement,
     visit_occurrence     = visit_occurrence,
+    procedure_occurrence = procedure_occurrence,
     death                = death,
     concept              = concept,
     concept_ancestor     = concept_ancestor,

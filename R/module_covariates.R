@@ -93,6 +93,18 @@ date_col <- function(table) {
 #' @param power_warn_threshold Power below this value flags a `WARN`. Default 0.80.
 #'
 #' @return A named list: `smd_table`, `prevalence_table`, `power`, `flags`.
+#'
+#' @examples
+#' if (requireNamespace("duckdb", quietly = TRUE)) {
+#'   con <- example_cdm()
+#'   # The demo CDM ships two arms: target = 1, comparator = 2.
+#'   res <- run_covariates(con, cdm_schema = "main", cohort_table = "cohort",
+#'                         cohort_id = 1, comparator_id = 2, vocab_schema = "main")
+#'   res$smd_table
+#'   res$power
+#'   cdm_disconnect(con)
+#' }
+#'
 #' @export
 run_covariates <- function(con,
                            cdm_schema,

@@ -60,3 +60,15 @@ Profiles whether the cohort-defining concepts are present, well-mapped, and
 richly represented in the CDM. Maps to FDA RWE Relevance (are the data fit for
 the question?). This is the first module to read the vocabulary schema.
 }
+\examples{
+if (requireNamespace("duckdb", quietly = TRUE)) {
+  con <- example_cdm()
+  # 316139 = "Heart failure" (SNOMED), the seed concept in the demo CDM.
+  res <- run_concepts(con, cdm_schema = "main", concept_ids = 316139,
+                      domain = "condition", vocab_schema = "main")
+  res$prevalence
+  res$mapping_by_domain
+  cdm_disconnect(con)
+}
+
+}

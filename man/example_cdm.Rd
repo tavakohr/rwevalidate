@@ -10,18 +10,21 @@ example_cdm()
 A live \code{DBI} connection to an in-memory DuckDB OMOP CDM.
 }
 \description{
-Builds a tiny synthetic OMOP CDM (10 persons) in an in-memory DuckDB database
+Builds a tiny synthetic OMOP CDM (20 persons) in an in-memory DuckDB database
 and returns a live connection. Every table \code{rwevalidate} queries for the
-attrition and density modules is populated, together with a \code{cohort} table
-that has the standard \code{subject_id}, \code{cohort_definition_id},
-\code{cohort_start_date}, and \code{cohort_end_date} columns. The clinical tables and a
-minimal vocabulary both live in the default \code{main} schema.
+concept, attrition, density, and covariate modules is populated, together
+with a \code{cohort} table that has the standard \code{subject_id},
+\code{cohort_definition_id}, \code{cohort_start_date}, and \code{cohort_end_date} columns.
+The \code{cohort} table carries two arms so all four modules can be demonstrated:
+persons 1-10 are the target cohort (\code{cohort_definition_id = 1}) and persons
+11-20 are a comparator (\code{cohort_definition_id = 2}). The clinical tables and
+a minimal vocabulary both live in the default \code{main} schema.
 }
 \details{
 This exists so the package can be tried, and its examples can run, without a
-live database connection. It is a synthetic demo fixture, not a substitute for
-a real CDM. The \code{duckdb} package (a soft dependency) must be installed. The
-caller owns the returned connection and should close it with
+live database connection. It is a synthetic demo fixture, not a substitute
+for a real CDM. The \code{duckdb} package (a soft dependency) must be installed.
+The caller owns the returned connection and should close it with
 \code{\link[=cdm_disconnect]{cdm_disconnect()}}.
 }
 \examples{

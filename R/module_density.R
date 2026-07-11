@@ -73,6 +73,16 @@ density_one_domain <- function(con, cdm_schema, cohort_table, cohort_id,
 #'     \item{flags}{character vector of `WARN:`/`FAIL:` messages}
 #'   }
 #'
+#' @examples
+#' if (requireNamespace("duckdb", quietly = TRUE)) {
+#'   con <- example_cdm()
+#'   res <- run_density(con, cdm_schema = "main", cohort_table = "cohort",
+#'                      cohort_id = 1)
+#'   head(res$density_by_domain)
+#'   res$followup_summary
+#'   cdm_disconnect(con)
+#' }
+#'
 #' @export
 run_density <- function(con,
                         cdm_schema,

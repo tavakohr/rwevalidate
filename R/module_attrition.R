@@ -41,6 +41,16 @@
 #'     \item{flags}{character vector of `WARN:`/`FAIL:` messages (empty if all pass)}
 #'   }
 #'
+#' @examples
+#' if (requireNamespace("duckdb", quietly = TRUE)) {
+#'   con <- example_cdm()
+#'   res <- run_attrition(con, cdm_schema = "main", cohort_table = "cohort",
+#'                        cohort_id = 1, vocab_schema = "main")
+#'   res$cohort_size
+#'   res$demographics
+#'   cdm_disconnect(con)
+#' }
+#'
 #' @export
 run_attrition <- function(con,
                           cdm_schema,
