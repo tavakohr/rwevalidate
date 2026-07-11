@@ -22,8 +22,8 @@ OHDSI
 OMOP
 PLoS
 Pandoc
-PharmacoEpidemiology
 Pharmacoepidemiol
+Pharmacoepidemiology
 PhysioNet
 Pottegard
 REporting
@@ -63,6 +63,7 @@ reproducibility
 resubmission
 rmarkdown
 roadmap
+runnable
 schema's
 schemas
 tavakohr

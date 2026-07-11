@@ -1,7 +1,7 @@
 Package: rwevalidate
 Title: Validate Patient Cohorts for Real-World Evidence Studies on the OMOP
     Common Data Model
-Version: 0.1.1
+Version: 0.1.2
 Authors@R:
     person("Hamid", "Tavakoli", email = "htavakoli@gmail.com",
            role = c("aut", "cre"))
@@ -13,10 +13,10 @@ Description: Validates instantiated patient cohorts on an Observational
     attrition, temporal data density, and covariate feasibility against a
     comparator. The checks are aligned with the United States Food and Drug
     Administration (FDA) guidance on real-world data and evidence, FDA (2023)
-    <https://www.fda.gov/media/171667/download>, the HARmonized Protocol
+    <https://www.fda.gov/media/171667/download>, the Harmonized Protocol
     Template to Enhance Reproducibility (HARPER), Wang and others (2022)
-    <doi:10.1002/pds.5507>, and the REporting of studies Conducted using
-    Observational Routinely collected Data for PharmacoEpidemiology
+    <doi:10.1002/pds.5507>, and the Reporting of Studies Conducted Using
+    Observational Routinely-Collected Data for Pharmacoepidemiology
     (RECORD-PE) statement, Langan and others (2018) <doi:10.1136/bmj.k3532>.
     A self-contained example database is bundled so the checks can be run
     without a live database connection.

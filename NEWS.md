@@ -1,3 +1,12 @@
+# rwevalidate 0.1.2
+
+CRAN resubmission addressing a second review comment; no functional changes.
+
+* DESCRIPTION: write the HARPER and RECORD-PE framework names in normal
+  capitalization ("Harmonized...", "Reporting...", "Pharmacoepidemiology")
+  instead of the mixed-case styling that the CRAN spell check flagged. The
+  acronyms remain in parentheses.
+
 # rwevalidate 0.1.1
 
 CRAN resubmission addressing reviewer feedback; no functional changes.

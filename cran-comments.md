@@ -2,37 +2,22 @@
 
 ## Resubmission
 
-This is a resubmission (version 0.1.1) addressing the review comments of
-2026-07-10 (Konstanze Lauseker). Thank you for the review.
+This is a resubmission (version 0.1.2) addressing Uwe Ligges's comment of
+2026-07-11 on version 0.1.1. Thank you for the review.
 
-1. **Acronyms in the Description.** All acronyms are now explained at first
-   use in the Description text: Observational Medical Outcomes Partnership
-   (OMOP), Common Data Model (CDM), real-world evidence (RWE), Hypertext
-   Markup Language (HTML), JavaScript Object Notation (JSON), United States
-   Food and Drug Administration (FDA), HARmonized Protocol Template to
-   Enhance Reproducibility (HARPER), and REporting of studies Conducted
-   using Observational Routinely collected Data for PharmacoEpidemiology
-   (RECORD-PE).
+The three mixed-case fragments flagged in the Description ("HARmonized",
+"REporting", "PharmacoEpidemiology") have been rewritten in normal
+capitalization: "the Harmonized Protocol Template to Enhance Reproducibility
+(HARPER)" and "the Reporting of Studies Conducted Using Observational
+Routinely-Collected Data for Pharmacoepidemiology (RECORD-PE) statement". The
+acronyms themselves remain in parentheses, so the Description still explains
+them, and the spell check no longer flags the expansions.
 
-2. **Reference format.** References in the Description are now written as
-   authors (year) <doi:...> with the year in parentheses:
-   FDA (2023) <https://www.fda.gov/media/171667/download>,
-   Wang and others (2022) <doi:10.1002/pds.5507>, and
-   Langan and others (2018) <doi:10.1136/bmj.k3532>.
-
-3. **\dontrun{} usage.** The \dontrun{} example in validate_cohort() has been
-   removed; the function's remaining example is executable and runs during
-   checks against a small in-memory DuckDB CDM built by the exported
-   example_cdm() helper (no external database or credentials needed). The
-   equivalent live-database call is shown as illustrative code in the
-   function's Details section. A single \dontrun{} example remains, in
-   cdm_connect(): this function opens a connection to a live PostgreSQL
-   server and genuinely cannot be executed without a running server and real
-   credentials. \donttest{} is not possible here because \donttest examples
-   are executed during CRAN incoming checks and would fail without a
-   database. A new executable example (using the DuckDB example CDM) was
-   added to cdm_disconnect(), so every function that can be demonstrated
-   without a database server now has a runnable example.
+The earlier review of 2026-07-10 (Konstanze Lauseker) is still addressed:
+all acronyms are explained at first use, the references use the
+authors (year) <doi:...> form, and only cdm_connect() keeps a \dontrun{}
+example (it requires a live PostgreSQL server; every other exported function
+has a runnable example against the bundled DuckDB example CDM).
 
 ## Submission summary
 
@@ -44,20 +29,14 @@ evidence use and writes an HTML and JSON report.
 Local (Windows 11, R 4.6.0), R CMD check --as-cran: 0 errors | 0 warnings |
 0 notes.
 
-win-builder R-devel (2026-07-10): 0 errors | 0 warnings | 1 note.
-
-The note is the standard "New submission" note, together with one sub-item
-that is a false positive:
+The only remaining note is the standard "New submission" note, together with
+one sub-item that is a false positive:
 
 * Possibly misspelled words in DESCRIPTION: "CDM", "OMOP", "RWE",
-  "comparator", "Langan", and the mixed-case fragments "HARmonized",
-  "REporting", and "PharmacoEpidemiology". These are all correct: OMOP, CDM,
-  and RWE are the abbreviations that the Description now expands at first use;
-  "HARmonized", "REporting", and "PharmacoEpidemiology" are the official
-  mixed-case expansions of the HARPER and RECORD-PE names (their capital
-  letters spell the acronyms); "comparator" is the standard epidemiological
-  term for the reference arm; and "Langan" is an author surname in a cited
-  reference.
+  "comparator", and "Langan". These are all correct: OMOP, CDM, and RWE are
+  the abbreviations that the Description expands at first use; "comparator" is
+  the standard epidemiological term for the reference arm; and "Langan" is an
+  author surname in a cited reference.
 
 ## Examples
 
@@ -69,7 +48,7 @@ exercises every module the same way.
 
 ## Test environments
 
-* Local: Windows 11, R 4.4.2
+* Local: Windows 11, R 4.6.0
 * GitHub Actions: Ubuntu (release, devel, oldrel), macOS (release),
   Windows (release)
 
