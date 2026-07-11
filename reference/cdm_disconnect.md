@@ -29,7 +29,7 @@ if (requireNamespace("duckdb", quietly = TRUE)) {
   cdm_disconnect(con)
 }
 #> duckdb is keeping downloaded extensions in a temporary directory:
-#> ℹ /tmp/RtmpMmLyZz/duckdb/extensions
+#> ℹ /tmp/RtmpijICAF/duckdb/extensions
 #> This is removed when the R session ends, so extensions are re-downloaded each session.
 #> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 ```
