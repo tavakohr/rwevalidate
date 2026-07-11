@@ -41,16 +41,23 @@ evidence use and writes an HTML and JSON report.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note.
+Local (Windows 11, R 4.6.0), R CMD check --as-cran: 0 errors | 0 warnings |
+0 notes.
+
+win-builder R-devel (2026-07-10): 0 errors | 0 warnings | 1 note.
 
 The note is the standard "New submission" note, together with one sub-item
 that is a false positive:
 
-* Possibly misspelled words in DESCRIPTION: "comparator" and author surnames
-  such as "Langan". These are correct: "comparator" is the standard
-  epidemiological term for the reference arm, and "Langan" is an author
-  surname in a cited reference. All acronyms flagged previously (OMOP, CDM,
-  RWE) are now expanded at first use.
+* Possibly misspelled words in DESCRIPTION: "CDM", "OMOP", "RWE",
+  "comparator", "Langan", and the mixed-case fragments "HARmonized",
+  "REporting", and "PharmacoEpidemiology". These are all correct: OMOP, CDM,
+  and RWE are the abbreviations that the Description now expands at first use;
+  "HARmonized", "REporting", and "PharmacoEpidemiology" are the official
+  mixed-case expansions of the HARPER and RECORD-PE names (their capital
+  letters spell the acronyms); "comparator" is the standard epidemiological
+  term for the reference arm; and "Langan" is an author surname in a cited
+  reference.
 
 ## Examples
 

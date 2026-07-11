@@ -22,6 +22,7 @@ OHDSI
 OMOP
 PLoS
 Pandoc
+PharmacoEpidemiology
 Pharmacoepidemiol
 PhysioNet
 Pottegard
@@ -50,6 +51,7 @@ hardcoded
 io
 jsonlite
 lookback
+md
 orchestrator
 pds
 pharmacoepidemiology
@@ -58,6 +60,7 @@ pkgdown
 pre
 replicable
 reproducibility
+resubmission
 rmarkdown
 roadmap
 schema's
